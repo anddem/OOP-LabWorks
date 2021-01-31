@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MyLibrary;
 
 namespace LabWork_1
 {
@@ -10,6 +7,13 @@ namespace LabWork_1
     {
         static void Main(string[] args)
         {
+            ExampleOne.Run();
+            Output.PauseAndClear();
+
+            ExampleTwo.Run();
+            Output.PauseAndClear();
+
+            ExampleThree.Run();
         }
     }
 }
