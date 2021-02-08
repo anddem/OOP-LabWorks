@@ -20,7 +20,7 @@ namespace MyLibrary
                 }
                 catch (FormatException) //Если было сгенерировано исключение
                 {
-                    Console.WriteLine("Неверный формат ввода"); //Вывод сообщения об ошибке
+                    Output.ErrorMessage("Неверный формат ввода"); //Вывод сообщения об ошибке
                     ok = false;
                 }
             } while (!ok);
@@ -45,7 +45,7 @@ namespace MyLibrary
                 }
                 catch (FormatException)
                 {
-                    Console.WriteLine("Неверный формат ввода");
+                    Output.ErrorMessage("Неверный формат ввода");
                     ok = false;
                 }
             } while (!ok);
@@ -68,11 +68,11 @@ namespace MyLibrary
 
                     if (result >= minValue && result <= maxValue) //Если ввод находится в допустимых границах
                         ok = true; //Парсинг считывание успешно
-                    else Console.WriteLine(errMsg); //Иначе сообщене о выходе за границы
+                    else Output.ErrorMessage(errMsg); //Иначе сообщене о выходе за границы
                 }
                 catch (FormatException) //Если было сгенерировано исключение
                 {
-                    Console.WriteLine("Неверный формат ввода"); //Вывод сообщеня об исключении
+                    Output.ErrorMessage("Неверный формат ввода"); //Вывод сообщеня об исключении
                 }
             } while (!ok);
 
@@ -95,7 +95,7 @@ namespace MyLibrary
                 }
                 catch (FormatException)
                 {
-                    Console.WriteLine("Неверный формат ввода");
+                    Output.ErrorMessage("Неверный формат ввода");
                     ok = false;
                 }
             } while (!ok);
@@ -120,7 +120,7 @@ namespace MyLibrary
                 }
                 catch (FormatException)
                 {
-                    Console.WriteLine("Неверный формат ввода");
+                    Output.ErrorMessage("Неверный формат ввода");
                     ok = false;
                 }
             } while (!ok);
@@ -142,11 +142,11 @@ namespace MyLibrary
                     result = Convert.ToDouble(input);
 
                     if (result >= leftBorder && result < rightBorder) ok = true;
-                    else Console.WriteLine(errMsg);
+                    else Output.ErrorMessage(errMsg);
                 }
                 catch (FormatException)
                 {
-                    Console.WriteLine("Неверный формат ввода");
+                    Output.ErrorMessage("Неверный формат ввода");
                 }
             } while (!ok);
 

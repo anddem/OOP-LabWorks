@@ -4,7 +4,16 @@ namespace MyLibrary
 {
     public static class Output
     {
+        public static ConsoleColor Error => ConsoleColor.Red;
+        public static ConsoleColor Text => ConsoleColor.Cyan;
+        public static ConsoleColor Success => ConsoleColor.Green;
+
         public static void Clear() => Console.Clear();
+
+        public static void Clear(int secs)
+        {
+            
+        }
 
         /// <summary>
         /// Делает паузу при выводе, после нажатия кнопки очищает консоль
@@ -86,6 +95,38 @@ namespace MyLibrary
                 }
                 Console.Write(end); //Вывод завершающего символа
             }
+        }
+
+        public static void ErrorMessage(string error)
+        {
+            ConsoleColor fColor = Console.ForegroundColor;
+            Console.ForegroundColor = Error;
+            Console.WriteLine(error);
+            Console.ForegroundColor = fColor;
+        }
+
+        public static void Message(string msg)
+        {
+            ConsoleColor fColor = Console.ForegroundColor;
+            Console.ForegroundColor = Text;
+            Console.WriteLine(msg);
+            Console.ForegroundColor = fColor;
+        }
+
+        public static void SuccessMessage(string msg)
+        {
+            ConsoleColor fColor = Console.ForegroundColor;
+            Console.ForegroundColor = Success;
+            Console.WriteLine(msg);
+            Console.ForegroundColor = fColor;
+        }
+
+        public static void Message(string msg, ConsoleColor textColor)
+        {
+            ConsoleColor fColor = Console.ForegroundColor;
+            Console.ForegroundColor = textColor;
+            Console.WriteLine(msg);
+            Console.ForegroundColor = fColor;
         }
     }
 }
