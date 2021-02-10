@@ -89,24 +89,37 @@ namespace LabWork_11
             }
         }
 
-        public void AddToCollectons(Region region, Place bPlace)
+        public bool AddToCollectons(Region region, Place bPlace)
         {
             string strName = bPlace.ToString();
+            bool notAdded = false;
 
             if (!clsLinkedList.Contains(bPlace)) clsLinkedList.AddLast(bPlace);
+            else notAdded = true;
 
             if (!strLinkedList.Contains(strName)) strLinkedList.AddLast(strName);
+            else notAdded = true;
 
             if (!clsDict.ContainsKey(bPlace)) clsDict.Add(bPlace, region);
-            else clsDict[bPlace] = region;
+            else
+            {
+                clsDict[bPlace] = region;
+                notAdded = true;
+            }
 
             if (!strDict.ContainsKey(strName)) strDict.Add(strName, region);
-            else strDict[strName] = region;
+            else
+            {
+                strDict[strName] = region;
+                notAdded = true;
+            }
+
+            return notAdded;
         }
 
         public void PrintCollections()
         {
-            foreach (Place key in clsDict.Keys)
+            foreach (Place key in clsLinkedList)
                 Console.WriteLine($"Ключ: {key}\n" +
                     $"Значение: {clsDict[key]}\n");
         }
