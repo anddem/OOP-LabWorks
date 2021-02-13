@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,7 +14,7 @@ namespace LabWork_11
     {
         static Stopwatch timer = new Stopwatch();
 
-        static TestCollections collections;
+        static TestCollections collections = null;
 
         struct SearchResult
         {
@@ -25,74 +24,170 @@ namespace LabWork_11
 
         static void Main(string[] args)
         {
+            int action;
+
+            do
+            {
+                PrintInterface();
+                action = Input.Integer("Введите команду: ");
+
+                if (action != 0) DoAction(action);
+            } while (action != 0);
+        }
+
+        static void PrintInterface()
+        {
+            if (collections == null) Output.Message("Колекции не созданы\n\n");
+            else Output.Message($"Элементов в коллекциях: {collections.Count}\n\n");
+
+            Output.Message(
+                "1. Создать коллекции\n" +
+                "2. Добавить элемент в коллекции\n" +
+                "3. Измерить время нахождения первого элемента\n" +
+                "4. Измерить время нахождения среднего элемента\n" +
+                "5. Измерить время нахождения последнего элемента\n" +
+                "6. Измерить время нахождения элемента по ключу с клавиатуры\n" +
+                "7. Измерить время нахождения значения в словарях\n" +
+                "8. Измерить время нахождения значения в словарях с клавиатуры\n\n" +
+                "0. Выход\n\n");
+        }
+
+        static void CreateCollections()
+        {
             int len = Input.Integer("Введите количество элементов коллекций: ", "Число не может быть меньше 1", 1, Int32.MaxValue);
 
             collections = new TestCollections(len); //Создание коллекций
+        }
 
-            collections.PrintCollections();
+        static void DoAction(int actionNum)
+        {
+            switch (actionNum)
+            {
+                case 1: CreateCollections();
+                    break;
+                case 2: AddElement();
+                    break;
+                case 3: FindFirstElement();
+                    break;
+                case 4: FindMiddleElement();
+                    break;
+                case 5: FindLastElement();
+                    break;
+                case 6: FindAnotherElement();
+                    break;
+                case 7: FindValueByNum();
+                    break;
+                case 8: FindAnotherValue();
+                    break;
 
-            FindElements();
-
-            AddElement();
+                default: Output.ErrorMessage("Неизвестная команда\n");
+                    break;
+            }
+            Output.PauseAndClear();
         }
 
         #region Поиск элементов
-        static void FindElements()
-        {
-            FindFirstElement();
-
-            FindMiddleElement();
-
-            FindLastElement();
-
-            FindAnotherElement();
-        }
-
         static void FindFirstElement()
         {
-            Place first = new Place(collections.ClsLinkedList.First.Value.Name); //Запоминаем первый элемент
+            if (collections == null) Output.ErrorMessage("Коллекции не созданы\n");
+            else
+            {
 
-            Output.Message($"Поиск первого элемента:\n{first}");
+                Place first = new Place(collections.ClsList.First().Name); //Запоминаем первый элемент
 
-            FindElementInCollections(first, out SearchResult inClsLL, out SearchResult inStrLL, out SearchResult inClsDict, out SearchResult inStrDict);
+                Output.Message($"Поиск первого элемента:\n" +
+                    $"{first}\n");
 
-            PrintResults(inClsLL, inStrLL, inClsDict, inStrDict);
+                FindElementInCollections(first, out SearchResult inClsLL, out SearchResult inStrLL, out SearchResult inClsDict, out SearchResult inStrDict);
+
+                PrintResults(inClsLL, inStrLL, inClsDict, inStrDict);
+            }
         }
 
         static void FindMiddleElement()
         {
-            int index = collections.ClsLinkedList.Count / 2;
+            if (collections == null) Output.ErrorMessage("Коллекции не созданы\n");
+            else
+            {
+                int index = collections.ClsList.Count / 2;
 
-            Place middle = new Place(collections.ClsLinkedList.ElementAt(index).Name);
+                Place middle = new Place(collections.ClsList.ElementAt(index).Name);
 
-            Output.Message($"Поиск среднего элемента:\n{middle}");
+                Output.Message($"Поиск среднего элемента:\n" +
+                    $"{middle}\n");
 
-            FindElementInCollections(middle, out SearchResult inClsLL, out SearchResult inStrLL, out SearchResult inClsDict, out SearchResult inStrDict);
+                FindElementInCollections(middle, out SearchResult inClsLL, out SearchResult inStrLL, out SearchResult inClsDict, out SearchResult inStrDict);
 
-            PrintResults(inClsLL, inStrLL, inClsDict, inStrDict);
+                PrintResults(inClsLL, inStrLL, inClsDict, inStrDict);
+            }
         }
 
         static void FindLastElement()
         {
-            Place last = new Place(collections.ClsLinkedList.Last.Value.Name);
+            if (collections == null) Output.ErrorMessage("Коллекции не созданы\n");
+            else
+            {
+                Place last = new Place(collections.ClsList.Last().Name);
 
-            Output.Message($"Поиск последнего элемента:\n{last}");
+                Output.Message($"Поиск последнего элемента:\n" +
+                    $"{last}\n");
 
-            FindElementInCollections(last, out SearchResult inClsLL, out SearchResult inStrLL, out SearchResult inClsDict, out SearchResult inStrDict);
+                FindElementInCollections(last, out SearchResult inClsLL, out SearchResult inStrLL, out SearchResult inClsDict, out SearchResult inStrDict);
 
-            PrintResults(inClsLL, inStrLL, inClsDict, inStrDict);
+                PrintResults(inClsLL, inStrLL, inClsDict, inStrDict);
+            }
         }
 
         static void FindAnotherElement()
         {
-            string name = Input.String("Введите название места для поиска в коллекции: ");
-            Place place = new Place(name);
+            if (collections == null) Output.ErrorMessage("Коллекции не созданы\n");
+            else
+            {
+                string name = Input.String("Введите название места для поиска в коллекции: ");
+                Place place = new Place(name);
 
-            Output.Message($"Поиск элемента, которого нет в коллекции:\n{place}");
+                Output.Message($"Поиск элемента, которого нет в коллекции:\n" +
+                    $"{place}\n");
 
-            FindElementInCollections(place, out SearchResult inClsLL, out SearchResult inStrLL, out SearchResult inClsDict, out SearchResult inStrDict);
+                FindElementInCollections(place, out SearchResult inClsLL, out SearchResult inStrLL, out SearchResult inClsDict, out SearchResult inStrDict);
 
-            PrintResults(inClsLL, inStrLL, inClsDict, inStrDict);
+                PrintResults(inClsLL, inStrLL, inClsDict, inStrDict);
+            }
+        }
+
+        static void FindValueByNum()
+        {
+            if (collections == null) Output.ErrorMessage("Коллекции не созданы\n");
+            else
+            {
+                int num = Input.Integer("Введите номер искомого элемента: ", $"Введите число от 1 до {collections.Count}", 1, collections.Count);
+
+                Place key = collections.ClsList.ElementAt(num - 1);
+                Region value = collections.ClsSrotedDict[key];
+
+                Region region = new Region(value.Name, value.Population);
+
+                Output.Message($"Искомое значение:\n" +
+                    $"{region}\n");
+
+                if (FindValueInDict(region, out long ticks)) Output.SuccessMessage($"Элемент найден за {ticks} тиков\n");
+                else Output.SuccessMessage($"Элемент не найден за {ticks} тиков\n");
+            }
+        }
+
+        static void FindAnotherValue()
+        {
+            if (collections == null) Output.ErrorMessage("Коллекции не созданы\n");
+            else
+            {
+                string name = Input.String("Введите название искомого места: ");
+                int population = Input.Integer("Введите население искомого места: ", "Население не может быть отрицательным", 0, Int32.MaxValue);
+
+                Region region = new Region(name, population);
+
+                if (FindValueInDict(region, out long ticks)) Output.SuccessMessage($"Элемент найден за {ticks} тиков\n");
+                else Output.SuccessMessage($"Элемент не найден за {ticks} тиков\n");
+            }
         }
 
         static void FindElementInCollections(Place element, out SearchResult inClsLL, out SearchResult inStrLL, out SearchResult inClsDict, out SearchResult inStrDict)
@@ -108,7 +203,7 @@ namespace LabWork_11
         static bool FindElementInLinkedList(Place keyElement, out long ticks)
         {
             timer.Restart();
-            bool result = collections.ClsLinkedList.Contains(keyElement);
+            bool result = collections.ClsList.Contains(keyElement);
             timer.Stop();
             ticks = timer.ElapsedTicks;
 
@@ -118,7 +213,7 @@ namespace LabWork_11
         static bool FindElementInLinkedList(string keyElement, out long ticks)
         {
             timer.Restart();
-            bool result = collections.StrLinkedList.Contains(keyElement);
+            bool result = collections.StrList.Contains(keyElement);
             timer.Stop();
             ticks = timer.ElapsedTicks;
 
@@ -128,7 +223,7 @@ namespace LabWork_11
         static bool FindElementInDict(Place keyElement, out long ticks)
         {
             timer.Restart();
-            bool result = collections.ClsDict.ContainsKey(keyElement);
+            bool result = collections.ClsSrotedDict.ContainsKey(keyElement);
             timer.Stop();
             ticks = timer.ElapsedTicks;
 
@@ -138,7 +233,17 @@ namespace LabWork_11
         static bool FindElementInDict(string keyElement, out long ticks)
         {
             timer.Restart();
-            bool result = collections.StrDict.ContainsKey(keyElement);
+            bool result = collections.StrSortedDict.ContainsKey(keyElement);
+            timer.Stop();
+            ticks = timer.ElapsedTicks;
+
+            return result;
+        }
+
+        static bool FindValueInDict(Region value, out long ticks)
+        {
+            timer.Restart();
+            bool result = collections.ClsSrotedDict.ContainsValue(value);
             timer.Stop();
             ticks = timer.ElapsedTicks;
 
@@ -148,37 +253,33 @@ namespace LabWork_11
 
         static void PrintResults(SearchResult inClsLL, SearchResult inStrLL, SearchResult inClsDict, SearchResult inStrDict)
         {
-            if (inClsLL.isFounded) Output.SuccessMessage($"LinkedList, тип ключа - класс : Элемент найден за {inClsLL.ticks} тиков");
-            else Output.ErrorMessage($"LinkedList, тип ключа - класс : Элемент не найден за {inClsLL.ticks} тиков");
+            if (inClsLL.isFounded) Output.SuccessMessage($"List, тип ключа - класс : Элемент найден за {inClsLL.ticks} тиков\n");
+            else Output.ErrorMessage($"List, тип ключа - класс : Элемент не найден за {inClsLL.ticks} тиков\n");
 
-            if (inStrLL.isFounded) Output.SuccessMessage($"LinkedList, тип ключа - строка: Элемент найден за {inStrLL.ticks} тиков");
-            else Output.ErrorMessage($"LinkedList, тип ключа - строка: Элемент не найден за {inStrLL.ticks} тиков");
+            if (inStrLL.isFounded) Output.SuccessMessage($"List, тип ключа - строка: Элемент найден за {inStrLL.ticks} тиков\n");
+            else Output.ErrorMessage($"List, тип ключа - строка: Элемент не найден за {inStrLL.ticks} тиков\n");
 
-            if (inClsDict.isFounded) Output.SuccessMessage($"Dictionary, тип ключа - класс : Элемент найден за {inClsDict.ticks} тиков");
-            else Output.ErrorMessage($"Dictionary, тип ключа - класс : Элемент не найден за {inClsDict.ticks} тиков");
+            if (inClsDict.isFounded) Output.SuccessMessage($"SortedDictionary, тип ключа - класс : Элемент найден за {inClsDict.ticks} тиков\n");
+            else Output.ErrorMessage($"SortedDictionary, тип ключа - класс : Элемент не найден за {inClsDict.ticks} тиков\n");
 
-            if (inStrDict.isFounded) Output.SuccessMessage($"Dictionary, тип ключа - строка: Элемент найден за {inStrDict.ticks} тиков");
-            else Output.ErrorMessage($"Dictionary, тип ключа - строка: Элемент не найден за {inStrDict.ticks} тиков");
+            if (inStrDict.isFounded) Output.SuccessMessage($"SortedDictionary, тип ключа - строка: Элемент найден за {inStrDict.ticks} тиков\n");
+            else Output.ErrorMessage($"SortedDictionary, тип ключа - строка: Элемент не найден за {inStrDict.ticks} тиков\n");
         }
 
         static void AddElement()
         {
-            bool notAdded;
-            do
-            {
-                string name = Input.String("Введите название: ");
-                int population = Input.Integer("Введите население города: ");
+            if (collections == null) collections = new TestCollections();
 
-                Region region = new Region(name, population);
-                Place place = region.BasePlace;
+            string name = Input.String("Введите название: ");
+            int population = Input.Integer("Введите население: ");
 
-                notAdded = collections.AddToCollectons(region, place);
+            Region region = new Region(name, population);
+            Place place = region.BasePlace;
 
-                if (notAdded) Output.ErrorMessage("Элемент с таким ключом уже есть в коллекциях");
+            bool added = collections.AddToCollectons(region, place);
 
-            } while (notAdded);
-
-            Output.SuccessMessage("Элемент добавлен");
+            if (!added) Output.ErrorMessage("Элемент с таким ключом уже есть в коллекциях, значение в словарях было перезаписано\n");
+            else Output.SuccessMessage("Элемент добавлен\n");
         }
     }
 }

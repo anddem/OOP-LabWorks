@@ -11,48 +11,55 @@ namespace LabWork_11
 {
     class TestCollections
     {
-        LinkedList<Place> clsLinkedList;
-        LinkedList<string> strLinkedList;
+        List<Place> clsList;
+        List<string> strList;
 
-        Dictionary<Place, Region> clsDict;
-        Dictionary<string, Region> strDict;
+        SortedDictionary<Place, Region> clsSrotedDict;
+        SortedDictionary<string, Region> strSortedDict;
 
-        public LinkedList<Place> ClsLinkedList
+        public List<Place> ClsList
         {
-            get => clsLinkedList;
+            get => clsList;
         }
 
-        public LinkedList<string> StrLinkedList
+        public List<string> StrList
         {
-            get => strLinkedList;
+            get => strList;
         }
 
-        public Dictionary<Place, Region> ClsDict
+        public SortedDictionary<Place, Region> ClsSrotedDict
         {
-            get => clsDict;
+            get => clsSrotedDict;
         }
 
-        public Dictionary<string, Region> StrDict
+        public SortedDictionary<string, Region> StrSortedDict
         {
-            get => strDict;
+            get => strSortedDict;
         }
+
+        public int Count
+        {
+            get => ClsList.Count;
+        }
+
+        public TestCollections() => CreateCollections();
 
         public TestCollections(int len)
         {
             bool initManually = Input.Bool("Заполнить коллекции вручную? Y/N: ", new string[] { "да", "yes", "y" });
 
-            CreateCollections(len);
+            CreateCollections();
 
             InitCollections(len, initManually);
         }
 
-        void CreateCollections(int len)
+        void CreateCollections()
         {
-            clsLinkedList = new LinkedList<Place>();
-            strLinkedList = new LinkedList<string>();
+            clsList = new List<Place>();
+            strList = new List<string>();
 
-            clsDict = new Dictionary<Place, Region>();
-            strDict = new Dictionary<string, Region>();
+            clsSrotedDict = new SortedDictionary<Place, Region>();
+            strSortedDict = new SortedDictionary<string, Region>();
         }
 
         void InitCollections(int len, bool initManually)
@@ -61,12 +68,12 @@ namespace LabWork_11
             else InitCollectionsRandomly(len);
         }
 
-        public void InitCollectionsRandomly(int count)
+        void InitCollectionsRandomly(int count)
         {
-
             for (int i = 1; i <= count; i++)
             {
-                LabWork_10.Program.FillRandom(out string _, out string name, out _, out _, out int population, out _, out _);
+                string name = $"Случайное название номер {i}";
+                int population = Rand.Integer(0, Int32.MaxValue);
 
                 Region region = new Region(name, population);
                 Place bPlace = region.BasePlace;
@@ -75,7 +82,7 @@ namespace LabWork_11
             }
         }
 
-        public void InitCollectionsManually(int count)
+        void InitCollectionsManually(int count)
         {
             for (int i = 1; i <= count; i++)
             {
@@ -92,36 +99,33 @@ namespace LabWork_11
         public bool AddToCollectons(Region region, Place bPlace)
         {
             string strName = bPlace.ToString();
-            bool notAdded = false;
+            bool added;
 
-            if (!clsLinkedList.Contains(bPlace)) clsLinkedList.AddLast(bPlace);
-            else notAdded = true;
+            if (clsList.Contains(bPlace))
+            {
+                clsSrotedDict[bPlace] = region;
+                strSortedDict[strName] = region;
 
-            if (!strLinkedList.Contains(strName)) strLinkedList.AddLast(strName);
-            else notAdded = true;
-
-            if (!clsDict.ContainsKey(bPlace)) clsDict.Add(bPlace, region);
+                added = false;
+            }
             else
             {
-                clsDict[bPlace] = region;
-                notAdded = true;
+                clsList.Add(bPlace);
+                strList.Add(strName);
+                clsSrotedDict.Add(bPlace, region);
+                strSortedDict.Add(strName, region);
+
+                added = true;
             }
 
-            if (!strDict.ContainsKey(strName)) strDict.Add(strName, region);
-            else
-            {
-                strDict[strName] = region;
-                notAdded = true;
-            }
-
-            return notAdded;
+            return added;
         }
 
         public void PrintCollections()
         {
-            foreach (Place key in clsLinkedList)
+            foreach (Place key in clsList)
                 Console.WriteLine($"Ключ: {key}\n" +
-                    $"Значение: {clsDict[key]}\n");
+                    $"Значение: {clsSrotedDict[key]}\n");
         }
     }
 }

@@ -10,18 +10,13 @@ namespace MyLibrary
 
         public static void Clear() => Console.Clear();
 
-        public static void Clear(int secs)
-        {
-            
-        }
-
         /// <summary>
         /// Делает паузу при выводе, после нажатия кнопки очищает консоль
         /// </summary>
         /// <param name="msg">Предложение ввода</param>
         public static void PauseAndClear(string msg = "Нажмите любую клавишу для продолжения...")
         {
-            Console.Write(msg);
+            Message(msg);
             Console.ReadKey(true);
             Clear();
         }
@@ -101,7 +96,7 @@ namespace MyLibrary
         {
             ConsoleColor fColor = Console.ForegroundColor;
             Console.ForegroundColor = Error;
-            Console.WriteLine(error);
+            Console.Write(error);
             Console.ForegroundColor = fColor;
         }
 
@@ -109,7 +104,7 @@ namespace MyLibrary
         {
             ConsoleColor fColor = Console.ForegroundColor;
             Console.ForegroundColor = Text;
-            Console.WriteLine(msg);
+            Console.Write(msg);
             Console.ForegroundColor = fColor;
         }
 
@@ -117,7 +112,7 @@ namespace MyLibrary
         {
             ConsoleColor fColor = Console.ForegroundColor;
             Console.ForegroundColor = Success;
-            Console.WriteLine(msg);
+            Console.Write(msg);
             Console.ForegroundColor = fColor;
         }
 
@@ -125,7 +120,7 @@ namespace MyLibrary
         {
             ConsoleColor fColor = Console.ForegroundColor;
             Console.ForegroundColor = textColor;
-            Console.WriteLine(msg);
+            Console.Write(msg);
             Console.ForegroundColor = fColor;
         }
     }
