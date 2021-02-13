@@ -49,5 +49,19 @@ namespace LabWork_10
             Place temp = (Place)obj;
             return String.Compare(temp.Name, this.Name);
         }
+
+        public override bool Equals(object obj)
+        {
+            if (this.GetType() != obj.GetType()) return false;
+
+            Place place = (Place)obj;
+
+            return this.Name == place.Name;
+        }
+
+        public override int GetHashCode()
+        {
+            return Name.GetHashCode();
+        }
     }
 }

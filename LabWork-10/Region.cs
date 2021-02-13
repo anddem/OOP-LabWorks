@@ -4,6 +4,11 @@ namespace LabWork_10
 {
     public class Region : Place
     {
+        public Place BasePlace
+        {
+            get => new Place(Name);
+        }
+
         private int population;
 
         public int Population //Население региона

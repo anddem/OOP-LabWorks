@@ -4,6 +4,10 @@ namespace MyLibrary
 {
     public static class Output
     {
+        public static ConsoleColor Error => ConsoleColor.Red;
+        public static ConsoleColor Text => ConsoleColor.Cyan;
+        public static ConsoleColor Success => ConsoleColor.Green;
+
         public static void Clear() => Console.Clear();
 
         /// <summary>
@@ -12,7 +16,7 @@ namespace MyLibrary
         /// <param name="msg">Предложение ввода</param>
         public static void PauseAndClear(string msg = "Нажмите любую клавишу для продолжения...")
         {
-            Console.Write(msg);
+            Message(msg);
             Console.ReadKey(true);
             Clear();
         }
@@ -86,6 +90,38 @@ namespace MyLibrary
                 }
                 Console.Write(end); //Вывод завершающего символа
             }
+        }
+
+        public static void ErrorMessage(string error)
+        {
+            ConsoleColor fColor = Console.ForegroundColor;
+            Console.ForegroundColor = Error;
+            Console.Write(error);
+            Console.ForegroundColor = fColor;
+        }
+
+        public static void Message(string msg)
+        {
+            ConsoleColor fColor = Console.ForegroundColor;
+            Console.ForegroundColor = Text;
+            Console.Write(msg);
+            Console.ForegroundColor = fColor;
+        }
+
+        public static void SuccessMessage(string msg)
+        {
+            ConsoleColor fColor = Console.ForegroundColor;
+            Console.ForegroundColor = Success;
+            Console.Write(msg);
+            Console.ForegroundColor = fColor;
+        }
+
+        public static void Message(string msg, ConsoleColor textColor)
+        {
+            ConsoleColor fColor = Console.ForegroundColor;
+            Console.ForegroundColor = textColor;
+            Console.Write(msg);
+            Console.ForegroundColor = fColor;
         }
     }
 }
