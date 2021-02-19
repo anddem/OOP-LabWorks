@@ -43,12 +43,13 @@ namespace LabWork_11
             Output.Message(
                 "1. Создать коллекции\n" +
                 "2. Добавить элемент в коллекции\n" +
-                "3. Измерить время нахождения первого элемента\n" +
-                "4. Измерить время нахождения среднего элемента\n" +
-                "5. Измерить время нахождения последнего элемента\n" +
-                "6. Измерить время нахождения элемента по ключу с клавиатуры\n" +
-                "7. Измерить время нахождения значения в словарях\n" +
-                "8. Измерить время нахождения значения в словарях с клавиатуры\n\n" +
+                "3. Удалить элемент из коллекции\n" +
+                "4. Измерить время нахождения первого элемента\n" +
+                "5. Измерить время нахождения среднего элемента\n" +
+                "6. Измерить время нахождения последнего элемента\n" +
+                "7. Измерить время нахождения элемента по ключу с клавиатуры\n" +
+                "8. Измерить время нахождения значения в словарях\n" +
+                "9. Измерить время нахождения значения в словарях с клавиатуры\n\n" +
                 "0. Выход\n\n");
         }
 
@@ -67,18 +68,21 @@ namespace LabWork_11
                     break;
                 case 2: AddElement();
                     break;
-                case 3: FindFirstElement();
+                case 3: RemoveElement();
                     break;
-                case 4: FindMiddleElement();
+                case 4: FindFirstElement();
                     break;
-                case 5: FindLastElement();
+                case 5: FindMiddleElement();
                     break;
-                case 6: FindAnotherElement();
+                case 6: FindLastElement();
                     break;
-                case 7: FindValueByNum();
+                case 7: FindAnotherElement();
                     break;
-                case 8: FindAnotherValue();
+                case 8: FindValueByNum();
                     break;
+                case 9: FindAnotherValue();
+                    break;
+
 
                 default: Output.ErrorMessage("Неизвестная команда\n");
                     break;
@@ -89,7 +93,7 @@ namespace LabWork_11
         #region Поиск элементов
         static void FindFirstElement()
         {
-            if (collections == null) Output.ErrorMessage("Коллекции не созданы\n");
+            if (collections == null || collections.Count == 0) Output.ErrorMessage("Коллекции пусты!\n");
             else
             {
 
@@ -106,7 +110,7 @@ namespace LabWork_11
 
         static void FindMiddleElement()
         {
-            if (collections == null) Output.ErrorMessage("Коллекции не созданы\n");
+            if (collections == null || collections.Count == 0) Output.ErrorMessage("Коллекции пусты!\n");
             else
             {
                 int index = collections.ClsList.Count / 2;
@@ -124,7 +128,7 @@ namespace LabWork_11
 
         static void FindLastElement()
         {
-            if (collections == null) Output.ErrorMessage("Коллекции не созданы\n");
+            if (collections == null || collections.Count == 0) Output.ErrorMessage("Коллекции пусты!\n");
             else
             {
                 Place last = new Place(collections.ClsList.Last().Name);
@@ -140,7 +144,7 @@ namespace LabWork_11
 
         static void FindAnotherElement()
         {
-            if (collections == null) Output.ErrorMessage("Коллекции не созданы\n");
+            if (collections == null || collections.Count == 0) Output.ErrorMessage("Коллекции пусты!\n");
             else
             {
                 string name = Input.String("Введите название места для поиска в коллекции: ");
@@ -157,7 +161,7 @@ namespace LabWork_11
 
         static void FindValueByNum()
         {
-            if (collections == null) Output.ErrorMessage("Коллекции не созданы\n");
+            if (collections == null || collections.Count == 0) Output.ErrorMessage("Коллекции пусты!\n");
             else
             {
                 int num = Input.Integer("Введите номер искомого элемента: ", $"Введите число от 1 до {collections.Count}", 1, collections.Count);
@@ -177,7 +181,7 @@ namespace LabWork_11
 
         static void FindAnotherValue()
         {
-            if (collections == null) Output.ErrorMessage("Коллекции не созданы\n");
+            if (collections == null || collections.Count == 0) Output.ErrorMessage("Коллекции пусты!\n");
             else
             {
                 string name = Input.String("Введите название искомого места: ");
@@ -280,6 +284,22 @@ namespace LabWork_11
 
             if (!added) Output.ErrorMessage("Элемент с таким ключом уже есть в коллекциях, значение в словарях было перезаписано\n");
             else Output.SuccessMessage("Элемент добавлен\n");
+        }
+
+        static void RemoveElement()
+        {
+            if (collections == null || collections.Count == 0) Output.ErrorMessage("Коллекции пусты!\n");
+            else
+            {
+                string name = Input.String("Введите название: ");
+
+                Place key = new Place(name);
+
+                bool removed = collections.RemoveFromCollectins(key);
+
+                if (removed) Output.SuccessMessage("Элемент удалён\n");
+                else Output.ErrorMessage("Такого элемента в коллекциях нет\n");
+            }
         }
     }
 }

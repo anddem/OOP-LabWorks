@@ -127,5 +127,19 @@ namespace LabWork_11
                 Console.WriteLine($"Ключ: {key}\n" +
                     $"Значение: {clsSrotedDict[key]}\n");
         }
+
+        public bool RemoveFromCollectins(Place key)
+        {
+            if (clsList.Contains(key))
+            {
+                clsList.Remove(key);
+                strList.Remove(key.ToString());
+
+                clsSrotedDict.Remove(key);
+                strSortedDict.Remove(key.ToString());
+                return true;
+            }
+            return false;
+        }
     }
 }
