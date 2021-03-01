@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using System.Diagnostics;
 
 using MyLibrary;
@@ -167,7 +164,7 @@ namespace LabWork_11
                 int num = Input.Integer("Введите номер искомого элемента: ", $"Введите число от 1 до {collections.Count}", 1, collections.Count);
 
                 Place key = collections.ClsList.ElementAt(num - 1);
-                Region value = collections.ClsSrotedDict[key];
+                Region value = collections.ClsSortedDict[key];
 
                 Region region = new Region(value.Name, value.Population);
 
@@ -227,7 +224,7 @@ namespace LabWork_11
         static bool FindElementInDict(Place keyElement, out long ticks)
         {
             timer.Restart();
-            bool result = collections.ClsSrotedDict.ContainsKey(keyElement);
+            bool result = collections.ClsSortedDict.ContainsKey(keyElement);
             timer.Stop();
             ticks = timer.ElapsedTicks;
 
@@ -247,7 +244,7 @@ namespace LabWork_11
         static bool FindValueInDict(Region value, out long ticks)
         {
             timer.Restart();
-            bool result = collections.ClsSrotedDict.ContainsValue(value);
+            bool result = collections.ClsSortedDict.ContainsValue(value);
             timer.Stop();
             ticks = timer.ElapsedTicks;
 

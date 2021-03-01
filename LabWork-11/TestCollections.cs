@@ -27,7 +27,7 @@ namespace LabWork_11
             get => strList;
         }
 
-        public SortedDictionary<Place, Region> ClsSrotedDict
+        public SortedDictionary<Place, Region> ClsSortedDict
         {
             get => clsSrotedDict;
         }
