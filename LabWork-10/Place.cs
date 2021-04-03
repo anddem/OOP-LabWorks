@@ -36,7 +36,7 @@ namespace LabWork_10
 
         public object Clone()
         {
-            return new Place($"Клон {Name}");
+            return new Place(Name);
         }
 
         public object ShallowCopy()
@@ -62,6 +62,26 @@ namespace LabWork_10
         public override int GetHashCode()
         {
             return Name.GetHashCode();
+        }
+
+        public static bool operator > (Place left, Place right)
+        {
+            return string.Compare(left.Name, right.Name) == 1;
+        }
+
+        public static bool operator < (Place left, Place right)
+        {
+            return string.Compare(left.Name, right.Name) == -1;
+        }
+
+        public static bool operator == (Place left, Place right)
+        {
+            return string.Compare(left.Name, right.Name) == 0;
+        }
+
+        public static bool operator !=(Place left, Place right)
+        {
+            return string.Compare(left.Name, right.Name) != 0;
         }
     }
 }

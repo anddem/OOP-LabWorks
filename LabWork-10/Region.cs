@@ -49,7 +49,7 @@ namespace LabWork_10
 
         public new object Clone()
         {
-            return new Region($"Клон {Name}", Population);
+            return new Region(Name, Population);
         }
 
         public new object ShallowCopy()
@@ -63,10 +63,30 @@ namespace LabWork_10
 
             if (String.Compare(temp.Name, this.Name) != 0) return String.Compare(temp.Name, this.Name);
 
-            if (temp.Population > this.Population) return 1;
-            if (temp.Population < this.Population) return -1;
+            if (this.Population > temp.Population) return 1;
+            if (this.Population < temp.Population) return -1;
 
             return 0;
+        }
+
+        public static bool operator >(Region left, Region right)
+        {
+            return left.CompareTo(right) == 1;
+        }
+
+        public static bool operator <(Region left, Region right)
+        {
+            return left.CompareTo(right) == -1;
+        }
+
+        public static bool operator ==(Region left, Region right)
+        {
+            return string.Compare(left.Name, right.Name) == 0 && left.Population == right.Population;
+        }
+
+        public static bool operator !=(Region left, Region right)
+        {
+            return string.Compare(left.Name, right.Name) != 0 || left.Population != right.Population;
         }
     }
 }

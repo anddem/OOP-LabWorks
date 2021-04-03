@@ -61,7 +61,7 @@ namespace LabWork_10
 
         public new object Clone()
         {
-            return new Address($"Клон {Name}", Street, HouseNumber);
+            return new Address(Name, Street, HouseNumber);
         }
 
         public new object ShallowCopy()

@@ -25,6 +25,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabWork-9", "LabWork-9\LabW
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabWork-9-Test", "LabWork-9-Test\LabWork-9-Test.csproj", "{2A0F8D99-C569-4C9C-88F8-BFB444528D2A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dijkstra", "Dijkstra\Dijkstra.csproj", "{AEBF3BE4-5EBF-4E5A-9852-9FF44395DEDF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LabWork-12", "LabWork-12\LabWork-12.csproj", "{F1EA828E-3576-4D1A-9591-A0AE75BD4A49}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +79,14 @@ Global
 		{2A0F8D99-C569-4C9C-88F8-BFB444528D2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A0F8D99-C569-4C9C-88F8-BFB444528D2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A0F8D99-C569-4C9C-88F8-BFB444528D2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEBF3BE4-5EBF-4E5A-9852-9FF44395DEDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEBF3BE4-5EBF-4E5A-9852-9FF44395DEDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEBF3BE4-5EBF-4E5A-9852-9FF44395DEDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEBF3BE4-5EBF-4E5A-9852-9FF44395DEDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F1EA828E-3576-4D1A-9591-A0AE75BD4A49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1EA828E-3576-4D1A-9591-A0AE75BD4A49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1EA828E-3576-4D1A-9591-A0AE75BD4A49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1EA828E-3576-4D1A-9591-A0AE75BD4A49}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

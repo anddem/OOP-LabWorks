@@ -54,7 +54,7 @@ namespace LabWork_10
 
         public new object Clone()
         {
-            return new City($"Клон {Name}", Population, Houses, (Address)CopyAddress.Clone());
+            return new City(Name, Population, Houses, (Address)CopyAddress.Clone());
         }
 
         public new object ShallowCopy()

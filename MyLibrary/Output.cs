@@ -4,10 +4,6 @@ namespace MyLibrary
 {
     public static class Output
     {
-        public static ConsoleColor Error => ConsoleColor.Red;
-        public static ConsoleColor Text => ConsoleColor.Cyan;
-        public static ConsoleColor Success => ConsoleColor.Green;
-
         public static void Clear() => Console.Clear();
 
         /// <summary>
@@ -16,7 +12,7 @@ namespace MyLibrary
         /// <param name="msg">Предложение ввода</param>
         public static void PauseAndClear(string msg = "Нажмите любую клавишу для продолжения...")
         {
-            Message(msg);
+            Text(msg);
             Console.ReadKey(true);
             Clear();
         }
@@ -92,36 +88,22 @@ namespace MyLibrary
             }
         }
 
-        public static void ErrorMessage(string error)
-        {
-            ConsoleColor fColor = Console.ForegroundColor;
-            Console.ForegroundColor = Error;
-            Console.Write(error);
-            Console.ForegroundColor = fColor;
-        }
-
-        public static void Message(string msg)
-        {
-            ConsoleColor fColor = Console.ForegroundColor;
-            Console.ForegroundColor = Text;
-            Console.Write(msg);
-            Console.ForegroundColor = fColor;
-        }
-
-        public static void SuccessMessage(string msg)
-        {
-            ConsoleColor fColor = Console.ForegroundColor;
-            Console.ForegroundColor = Success;
-            Console.Write(msg);
-            Console.ForegroundColor = fColor;
-        }
-
-        public static void Message(string msg, ConsoleColor textColor)
+        public static void Text(string msg, ConsoleColor textColor = ConsoleColor.Cyan)
         {
             ConsoleColor fColor = Console.ForegroundColor;
             Console.ForegroundColor = textColor;
             Console.Write(msg);
             Console.ForegroundColor = fColor;
         }
+
+        public static void Text(object obj, ConsoleColor textColor = ConsoleColor.Cyan) => Text(obj.ToString()+"\n");
+
+        public static void Success(string msg) => Text(msg, ConsoleColor.Green);
+
+        public static void Success(object obj) => Success(obj.ToString() + "\n");
+
+        public static void Error(string msg) => Text(msg, ConsoleColor.Red);
+
+        public static void Error(object obj) => Error(obj.ToString() + "\n");
     }
 }

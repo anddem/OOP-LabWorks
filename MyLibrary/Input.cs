@@ -14,13 +14,13 @@ namespace MyLibrary
                 try
                 {
                     ok = true;
-                    Output.Message(msg); //Вывод приглашения на ввод
+                    Output.Text(msg); //Вывод приглашения на ввод
                     string input = Console.ReadLine(); //Считывание строки с клавиатуры
                     result = Convert.ToInt32(input); //Попытка парсинга строки в число
                 }
                 catch (FormatException) //Если было сгенерировано исключение
                 {
-                    Output.ErrorMessage("Неверный формат ввода\n"); //Вывод сообщения об ошибке
+                    Output.Error("Неверный формат ввода\n"); //Вывод сообщения об ошибке
                     ok = false;
                 }
             } while (!ok);
@@ -38,14 +38,14 @@ namespace MyLibrary
                 try
                 {
                     ok = true;
-                    Output.Message(msg);
+                    Output.Text(msg);
                     string input = Console.ReadLine();
                     result = Convert.ToInt32(input);
                     foreach (int value in nonValidValues) ok = result != value && ok;
                 }
                 catch (FormatException)
                 {
-                    Output.ErrorMessage("Неверный формат ввода\n");
+                    Output.Error("Неверный формат ввода\n");
                     ok = false;
                 }
             } while (!ok);
@@ -62,17 +62,17 @@ namespace MyLibrary
             {
                 try
                 {
-                    Output.Message(msg); //Вывод приглашения на ввод
+                    Output.Text(msg); //Вывод приглашения на ввод
                     string input = Console.ReadLine(); //Считывание строки
                     result = Convert.ToInt32(input); //Попытка парсинга
 
                     if (result >= minValue && result <= maxValue) //Если ввод находится в допустимых границах
                         ok = true; //Парсинг считывание успешно
-                    else Output.ErrorMessage($"{errMsg}\n"); //Иначе сообщене о выходе за границы
+                    else Output.Error($"{errMsg}\n"); //Иначе сообщене о выходе за границы
                 }
                 catch (FormatException) //Если было сгенерировано исключение
                 {
-                    Output.ErrorMessage("Неверный формат ввода\n"); //Вывод сообщеня об исключении
+                    Output.Error("Неверный формат ввода\n"); //Вывод сообщеня об исключении
                 }
             } while (!ok);
 
@@ -89,13 +89,13 @@ namespace MyLibrary
                 try
                 {
                     ok = true;
-                    Output.Message(msg);
+                    Output.Text(msg);
                     string input = Console.ReadLine();
                     result = Convert.ToDouble(input);
                 }
                 catch (FormatException)
                 {
-                    Output.ErrorMessage("Неверный формат ввода\n");
+                    Output.Error("Неверный формат ввода\n");
                     ok = false;
                 }
             } while (!ok);
@@ -113,14 +113,14 @@ namespace MyLibrary
                 try
                 {
                     ok = true;
-                    Output.Message(msg);
+                    Output.Text(msg);
                     string input = Console.ReadLine();
                     result = Convert.ToDouble(input);
                     foreach (double value in nonValidValues) ok = result != value;
                 }
                 catch (FormatException)
                 {
-                    Output.ErrorMessage("Неверный формат ввода\n");
+                    Output.Error("Неверный формат ввода\n");
                     ok = false;
                 }
             } while (!ok);
@@ -137,16 +137,16 @@ namespace MyLibrary
             {
                 try
                 {
-                    Output.Message(msg);
+                    Output.Text(msg);
                     string input = Console.ReadLine();
                     result = Convert.ToDouble(input);
 
                     if (result >= leftBorder && result < rightBorder) ok = true;
-                    else Output.ErrorMessage($"{errMsg}\n");
+                    else Output.Error($"{errMsg}\n");
                 }
                 catch (FormatException)
                 {
-                    Output.ErrorMessage("Неверный формат ввода\n");
+                    Output.Error("Неверный формат ввода\n");
                 }
             } while (!ok);
 
@@ -158,10 +158,10 @@ namespace MyLibrary
             string result = "";
             do
             {
-                Output.Message(msg);
+                Output.Text(msg);
                 string input = Console.ReadLine();
                 result = Convert.ToString(input);
-            } while (System.String.IsNullOrWhiteSpace(result));
+            } while (string.IsNullOrWhiteSpace(result));
 
             return result;
         }
