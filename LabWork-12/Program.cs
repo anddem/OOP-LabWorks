@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 using MyLibrary;
+using LabWork_10;
 
 namespace LabWork_12
 {
@@ -65,25 +66,15 @@ namespace LabWork_12
 
         static void Experiment()
         {
-            TreePoint[] points = new TreePoint[] {
-                new TreePoint("1", 1),
-                new TreePoint("1", 2),
-                new TreePoint("1", 0),
-                new TreePoint("2", 1)
-            };
+            Place place = new Place();
+            Region region = new Region();
+            City city = new City();
+            Address address = new Address();
 
-            for (int i = 0; i < 4; i++)
-            {
-                for (int j = 0; j < 4; j++)
-                {
-                    char res;
-                    if (points[i] > points[j]) res = '>';
-                    else if (points[i] < points[j]) res = '<';
-                    else res = '=';
-                    Console.Write($"{res} ");
-                }
-                Console.WriteLine();
-            }
+            if (place is null) Output.Success("place");
+            if (region is null) Output.Success("region");
+            if (city is null) Output.Success("city");
+            if (address is null) Output.Success("address");
         }
     }
 }

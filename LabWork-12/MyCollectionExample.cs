@@ -46,7 +46,7 @@ namespace LabWork_12
             switch (cmd)
             {
                 case 1:
-                    CreateElementAndAddToStack(stack);
+                    CreateElementsAndAddToStack(stack);
                     break;
                 case 2:
                     PrintStack(stack);
@@ -76,8 +76,8 @@ namespace LabWork_12
         static void SearchInStack(MyCollection<Place> stack)
         {
             if (stack == null) Output.Error("Стек не создан\n");
-            else if (stack.Contains(MakePlace())) Output.Success("Этот элемент есть в стеке\n");
-            else Output.Error("Элемента в стеке нет");
+            else if (stack.Contains(CreateElement())) Output.Success("Этот элемент есть в стеке\n");
+            else Output.Error("Элемента в стеке нет\n");
         }
 
         static void RemoveElementFromKeyboard(MyCollection<Place> stack)
@@ -85,7 +85,7 @@ namespace LabWork_12
             if (stack.Count == 0) Output.Error("Стек пуст\n");
             else
             {
-                Place element = MakePlace();
+                Place element = CreateElement();
                 if (stack.Remove(element)) Output.Success("Элемент удалён\n");
                 else Output.Error("Элемента нет в стеке\n");
             }
@@ -99,24 +99,93 @@ namespace LabWork_12
             else stack.Remove();
         }
 
-        static void CreateElementAndAddToStack(MyCollection<Place> stack)
-        {
-            Place element = MakePlace();
-            stack.Add(element);
-        }
-
         static void PrintStack(MyCollection<Place> stack)
         {
             if (stack.Count == 0) Output.Error("Стек пуст\n");
-            else foreach (Place place in stack) Output.Text(place);
+            else
+                foreach (Place place in stack)
+                {
+                    Output.Text($"Тип: {place.GetType()}\n" +
+                        $"{place}\n" +
+                        $"---\n");
+                }
 
+        }
+
+        #region Создание элементов
+        static void CreateElementsAndAddToStack(MyCollection<Place> stack)
+        {
+            Place[] elements = CreateElementsArray();
+
+            stack.Add(elements);
+        }
+
+        static Place[] CreateElementsArray()
+        {
+            int count = Input.Integer("Введите количество добавляемых элементов: ", "Количество должно быть больше нуля", 1, Int32.MaxValue);
+            Place[] elements = new Place[count];
+            int elemNum = 0;
+            while (elemNum != count)
+            {
+                elements[elemNum] = CreateElement();
+                if (elements[elemNum++] is null) elemNum--;
+            }
+
+            return elements;
+        }
+
+        static Place CreateElement()
+        {
+            string elementType = Input.String("Введите тип элемента: Place, Region, City или Address: ");
+            return MakeElementByType(elementType);
+        }
+
+        static Place MakeElementByType(string elementType)
+        {
+            switch(elementType)
+            {
+                case "Place": return MakePlace();
+                case "Region": return MakeRegion();
+                case "City": return MakeCity();
+                case "Address": return MakeAddress();
+
+                default:
+                    Output.Error("Неизвестный тип элемента!\n");
+                    return null;
+            }
         }
 
         static Place MakePlace()
         {
             string placeName = Input.String("Введите название места: ");
-
             return new Place(placeName);
         }
+        
+        static Region MakeRegion()
+        {
+            string regionName = Input.String("Введите название региона: ");
+            int population = Input.Integer("Введите население региона: ", "Население не может быть отрицательным", 0, Int32.MaxValue);
+
+            return new Region(regionName, population);
+        }
+
+        static City MakeCity()
+        {
+            string cityName = Input.String("Введите название города: ");
+            int population = Input.Integer("Введите население города: ", "Население не может быть отрицательным", 0, Int32.MaxValue);
+            int houses = Input.Integer("Введите количество домов в городе: ", "Количество домов не может быть отрицательным", 0, Int32.MaxValue);
+
+            return new City(cityName, population, houses, MakeAddress());
+        }
+
+        static Address MakeAddress()
+        {
+            string placeName = Input.String("Введите название места: ");
+            string street = Input.String("Введите улицу: ");
+            int houseNum = Input.Integer("Введите номер дома: ", "Номер должен быть больше 0", 1, Int32.MaxValue);
+
+            return new Address(placeName, street, houseNum);
+        }
+        #endregion
     }
 }

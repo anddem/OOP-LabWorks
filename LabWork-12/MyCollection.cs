@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 
 namespace LabWork_12
 {
-    class MyCollection<T> : IEnumerable<T>, ICollection<T>, ICloneable where T : ICloneable, IComparable
+    public class MyCollection<T> : IEnumerable<T>, ICollection<T>, ICloneable where T : ICloneable, IComparable
     {
         public int Count { get; private set; } = 0;
 
         public bool IsReadOnly => throw new NotImplementedException();
 
-        public CollectionPoint<T> First { get; set; } = default;
+        public CollectionPoint<T> First { get; private set; } = default;
 
-        public CollectionPoint<T> Last { get; set; } = default;
+        public CollectionPoint<T> Last { get; private set; } = default;
 
         public MyCollection() { }
 
@@ -105,7 +105,7 @@ namespace LabWork_12
         public bool Contains(T item)
         {
             foreach (T element in this)
-                if (item.CompareTo(element) == 0) return true;
+                if (item.Equals(element)) return true;
 
             return false;
         }

@@ -35,5 +35,10 @@ namespace LabWork_12
         {
             return Value.ToString();
         }
+
+        public override int GetHashCode()
+        {
+            return ToString().GetHashCode();
+        }
     }
 }

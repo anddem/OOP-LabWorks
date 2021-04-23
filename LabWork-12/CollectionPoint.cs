@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LabWork_12
 {
-    class CollectionPoint<T>
+    public class CollectionPoint<T>
     {
         public T Value { get; set; } = default;
 
