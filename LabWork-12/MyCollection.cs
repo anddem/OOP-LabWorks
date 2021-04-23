@@ -11,6 +11,19 @@ namespace LabWork_12
     {
         public int Count { get; private set; } = 0;
 
+        public T this[int index] {
+            get
+            {
+                if (index < 0 || index > Count) throw new IndexOutOfRangeException();
+
+                CollectionPoint<T> cursor = First;
+
+                while (index-- != -1) cursor = cursor.Next;
+
+                return cursor.Value;
+            }
+        }
+
         public bool IsReadOnly => throw new NotImplementedException();
 
         public CollectionPoint<T> First { get; private set; } = default;
