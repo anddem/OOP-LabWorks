@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using MyLibrary;
 
 namespace LabWork_12
 {
@@ -150,6 +149,19 @@ namespace LabWork_12
                     Count--;
                 }
                 return true;
+            }
+        }
+
+        public void Show()
+        {
+            if (First != null)
+            {
+                CollectionPoint<T> cursor = First;
+                while (cursor != null)
+                {
+                    Output.Text(cursor.Value);
+                    cursor = cursor.Next;
+                }
             }
         }
     }
