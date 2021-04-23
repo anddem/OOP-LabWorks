@@ -23,7 +23,7 @@ namespace LabWork_12
             }
         }
 
-        public bool IsReadOnly => throw new NotImplementedException();
+        public bool IsReadOnly { get; private set; } = false;
 
         public CollectionPoint<T> First { get; private set; } = default;
 
@@ -54,12 +54,12 @@ namespace LabWork_12
 
         public void Add(T[] values)
         {
-            for (int i = 0; i < values.Length; i++) Add(values[i]);
+            if (!IsReadOnly) for (int i = 0; i < values.Length; i++) Add(values[i]);
         }
 
         public T Remove()
         {
-            if (First == null) return default;
+            if (First == null || IsReadOnly) return default;
             else
             {
                 CollectionPoint<T> current = Last;
@@ -79,6 +79,7 @@ namespace LabWork_12
 
         public T[] Remove(int count)
         {
+            if (IsReadOnly) return default;
             T[] popped = new T[count < Count ? count : Count];
 
             for (int i = 0; i < Count && i < count; i++) popped[i] = Remove();
@@ -89,8 +90,11 @@ namespace LabWork_12
 
         public void Clear()
         {
-            First = Last = null;
-            Count = 0;
+            if (!IsReadOnly)
+            {
+                First = Last = null;
+                Count = 0;
+            }
         }
 
         public IEnumerator<T> GetEnumerator()
@@ -135,7 +139,7 @@ namespace LabWork_12
 
         public bool Remove(T item)
         {
-            if (First == null) return false;
+            if (First == null || IsReadOnly) return false;
             else
             {
                 if (Count == 1 && First.Value.Equals(item)) Remove();
