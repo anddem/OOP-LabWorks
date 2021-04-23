@@ -7,7 +7,7 @@ namespace MyLibrary
         private static readonly Random rand = new Random();
 
         /// <summary>
-        /// Возвращает неотрицаетельное случайное целое число
+        /// Возвращает неотрицательное случайное целое число
         /// </summary>
         /// <returns>32-разрядное число со знаком, которое больше или равно 0 и меньше чем Int32.MaxValue</returns>
         public static int Integer() => rand.Next();

@@ -186,7 +186,7 @@ namespace MyLibrary
             bool valid = false;
 
             foreach (string value in validAnswers)
-                valid = input.ToLower() == value.ToLower() || valid;
+                valid = input.ToLower() == value.ToLower() || valid; 
 
             return valid;
         }
