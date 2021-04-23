@@ -76,6 +76,7 @@ namespace LabWork_10
 
         public static bool operator == (Place left, Place right)
         {
+            if (left is null || right is null) return false;
             return string.Compare(left.Name, right.Name) == 0;
         }
 

@@ -88,5 +88,16 @@ namespace LabWork_10
         {
             return string.Compare(left.Name, right.Name) != 0 || left.Population != right.Population;
         }
+
+        public override bool Equals(object obj)
+        {
+            if (this.GetType() != obj.GetType()) return false;
+            return this == (Region)obj;
+        }
+
+        public override int GetHashCode()
+        {
+            return ToString().GetHashCode();
+        }
     }
 }
