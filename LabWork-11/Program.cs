@@ -34,10 +34,10 @@ namespace LabWork_11
 
         static void PrintInterface()
         {
-            if (collections == null) Output.Message("Колекции не созданы\n\n");
-            else Output.Message($"Элементов в коллекциях: {collections.Count}\n\n");
+            if (collections == null) Output.Text("Колекции не созданы\n\n");
+            else Output.Text($"Элементов в коллекциях: {collections.Count}\n\n");
 
-            Output.Message(
+            Output.Text(
                 "1. Создать коллекции\n" +
                 "2. Добавить элемент в коллекции\n" +
                 "3. Удалить элемент из коллекции\n" +
@@ -81,7 +81,7 @@ namespace LabWork_11
                     break;
 
 
-                default: Output.ErrorMessage("Неизвестная команда\n");
+                default: Output.Error("Неизвестная команда\n");
                     break;
             }
             Output.PauseAndClear();
@@ -90,13 +90,13 @@ namespace LabWork_11
         #region Поиск элементов
         static void FindFirstElement()
         {
-            if (collections == null || collections.Count == 0) Output.ErrorMessage("Коллекции пусты!\n");
+            if (collections == null || collections.Count == 0) Output.Error("Коллекции пусты!\n");
             else
             {
 
                 Place first = new Place(collections.ClsList.First().Name); //Запоминаем первый элемент
 
-                Output.Message($"Поиск первого элемента:\n" +
+                Output.Text($"Поиск первого элемента:\n" +
                     $"{first}\n");
 
                 FindElementInCollections(first, out SearchResult inClsLL, out SearchResult inStrLL, out SearchResult inClsDict, out SearchResult inStrDict);
@@ -107,14 +107,14 @@ namespace LabWork_11
 
         static void FindMiddleElement()
         {
-            if (collections == null || collections.Count == 0) Output.ErrorMessage("Коллекции пусты!\n");
+            if (collections == null || collections.Count == 0) Output.Error("Коллекции пусты!\n");
             else
             {
                 int index = collections.ClsList.Count / 2;
 
                 Place middle = new Place(collections.ClsList.ElementAt(index).Name);
 
-                Output.Message($"Поиск среднего элемента:\n" +
+                Output.Text($"Поиск среднего элемента:\n" +
                     $"{middle}\n");
 
                 FindElementInCollections(middle, out SearchResult inClsLL, out SearchResult inStrLL, out SearchResult inClsDict, out SearchResult inStrDict);
@@ -125,12 +125,12 @@ namespace LabWork_11
 
         static void FindLastElement()
         {
-            if (collections == null || collections.Count == 0) Output.ErrorMessage("Коллекции пусты!\n");
+            if (collections == null || collections.Count == 0) Output.Error("Коллекции пусты!\n");
             else
             {
                 Place last = new Place(collections.ClsList.Last().Name);
 
-                Output.Message($"Поиск последнего элемента:\n" +
+                Output.Text($"Поиск последнего элемента:\n" +
                     $"{last}\n");
 
                 FindElementInCollections(last, out SearchResult inClsLL, out SearchResult inStrLL, out SearchResult inClsDict, out SearchResult inStrDict);
@@ -141,13 +141,13 @@ namespace LabWork_11
 
         static void FindAnotherElement()
         {
-            if (collections == null || collections.Count == 0) Output.ErrorMessage("Коллекции пусты!\n");
+            if (collections == null || collections.Count == 0) Output.Error("Коллекции пусты!\n");
             else
             {
                 string name = Input.String("Введите название места для поиска в коллекции: ");
                 Place place = new Place(name);
 
-                Output.Message($"Поиск элемента, которого нет в коллекции:\n" +
+                Output.Text($"Поиск элемента, которого нет в коллекции:\n" +
                     $"{place}\n");
 
                 FindElementInCollections(place, out SearchResult inClsLL, out SearchResult inStrLL, out SearchResult inClsDict, out SearchResult inStrDict);
@@ -158,7 +158,7 @@ namespace LabWork_11
 
         static void FindValueByNum()
         {
-            if (collections == null || collections.Count == 0) Output.ErrorMessage("Коллекции пусты!\n");
+            if (collections == null || collections.Count == 0) Output.Error("Коллекции пусты!\n");
             else
             {
                 int num = Input.Integer("Введите номер искомого элемента: ", $"Введите число от 1 до {collections.Count}", 1, collections.Count);
@@ -168,17 +168,17 @@ namespace LabWork_11
 
                 Region region = new Region(value.Name, value.Population);
 
-                Output.Message($"Искомое значение:\n" +
+                Output.Text($"Искомое значение:\n" +
                     $"{region}\n");
 
-                if (FindValueInDict(region, out long ticks)) Output.SuccessMessage($"Элемент найден за {ticks} тиков\n");
-                else Output.SuccessMessage($"Элемент не найден за {ticks} тиков\n");
+                if (FindValueInDict(region, out long ticks)) Output.Success($"Элемент найден за {ticks} тиков\n");
+                else Output.Success($"Элемент не найден за {ticks} тиков\n");
             }
         }
 
         static void FindAnotherValue()
         {
-            if (collections == null || collections.Count == 0) Output.ErrorMessage("Коллекции пусты!\n");
+            if (collections == null || collections.Count == 0) Output.Error("Коллекции пусты!\n");
             else
             {
                 string name = Input.String("Введите название искомого места: ");
@@ -186,8 +186,8 @@ namespace LabWork_11
 
                 Region region = new Region(name, population);
 
-                if (FindValueInDict(region, out long ticks)) Output.SuccessMessage($"Элемент найден за {ticks} тиков\n");
-                else Output.SuccessMessage($"Элемент не найден за {ticks} тиков\n");
+                if (FindValueInDict(region, out long ticks)) Output.Success($"Элемент найден за {ticks} тиков\n");
+                else Output.Success($"Элемент не найден за {ticks} тиков\n");
             }
         }
 
@@ -254,17 +254,17 @@ namespace LabWork_11
 
         static void PrintResults(SearchResult inClsLL, SearchResult inStrLL, SearchResult inClsDict, SearchResult inStrDict)
         {
-            if (inClsLL.isFounded) Output.SuccessMessage($"List, тип ключа - класс : Элемент найден за {inClsLL.ticks} тиков\n");
-            else Output.ErrorMessage($"List, тип ключа - класс : Элемент не найден за {inClsLL.ticks} тиков\n");
+            if (inClsLL.isFounded) Output.Success($"List, тип ключа - класс : Элемент найден за {inClsLL.ticks} тиков\n");
+            else Output.Error($"List, тип ключа - класс : Элемент не найден за {inClsLL.ticks} тиков\n");
 
-            if (inStrLL.isFounded) Output.SuccessMessage($"List, тип ключа - строка: Элемент найден за {inStrLL.ticks} тиков\n");
-            else Output.ErrorMessage($"List, тип ключа - строка: Элемент не найден за {inStrLL.ticks} тиков\n");
+            if (inStrLL.isFounded) Output.Success($"List, тип ключа - строка: Элемент найден за {inStrLL.ticks} тиков\n");
+            else Output.Error($"List, тип ключа - строка: Элемент не найден за {inStrLL.ticks} тиков\n");
 
-            if (inClsDict.isFounded) Output.SuccessMessage($"SortedDictionary, тип ключа - класс : Элемент найден за {inClsDict.ticks} тиков\n");
-            else Output.ErrorMessage($"SortedDictionary, тип ключа - класс : Элемент не найден за {inClsDict.ticks} тиков\n");
+            if (inClsDict.isFounded) Output.Success($"SortedDictionary, тип ключа - класс : Элемент найден за {inClsDict.ticks} тиков\n");
+            else Output.Error($"SortedDictionary, тип ключа - класс : Элемент не найден за {inClsDict.ticks} тиков\n");
 
-            if (inStrDict.isFounded) Output.SuccessMessage($"SortedDictionary, тип ключа - строка: Элемент найден за {inStrDict.ticks} тиков\n");
-            else Output.ErrorMessage($"SortedDictionary, тип ключа - строка: Элемент не найден за {inStrDict.ticks} тиков\n");
+            if (inStrDict.isFounded) Output.Success($"SortedDictionary, тип ключа - строка: Элемент найден за {inStrDict.ticks} тиков\n");
+            else Output.Error($"SortedDictionary, тип ключа - строка: Элемент не найден за {inStrDict.ticks} тиков\n");
         }
 
         static void AddElement()
@@ -279,13 +279,13 @@ namespace LabWork_11
 
             bool added = collections.AddToCollectons(region, place);
 
-            if (!added) Output.ErrorMessage("Элемент с таким ключом уже есть в коллекциях, значение в словарях было перезаписано\n");
-            else Output.SuccessMessage("Элемент добавлен\n");
+            if (!added) Output.Error("Элемент с таким ключом уже есть в коллекциях, значение в словарях было перезаписано\n");
+            else Output.Success("Элемент добавлен\n");
         }
 
         static void RemoveElement()
         {
-            if (collections == null || collections.Count == 0) Output.ErrorMessage("Коллекции пусты!\n");
+            if (collections == null || collections.Count == 0) Output.Error("Коллекции пусты!\n");
             else
             {
                 string name = Input.String("Введите название: ");
@@ -294,8 +294,8 @@ namespace LabWork_11
 
                 bool removed = collections.RemoveFromCollectins(key);
 
-                if (removed) Output.SuccessMessage("Элемент удалён\n");
-                else Output.ErrorMessage("Такого элемента в коллекциях нет\n");
+                if (removed) Output.Success("Элемент удалён\n");
+                else Output.Error("Такого элемента в коллекциях нет\n");
             }
         }
     }
