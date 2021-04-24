@@ -10,7 +10,7 @@ namespace LabWork_12
     {
         public int Count { get; private set; } = 0;
 
-        public T this[int index] {
+        public virtual T this[int index] {
             get
             {
                 if (index < 0 || index > Count) throw new IndexOutOfRangeException();
@@ -20,6 +20,24 @@ namespace LabWork_12
                 while (index-- != -1) cursor = cursor.Next;
 
                 return cursor.Value;
+            }
+            set
+            {
+                if (index < 0 || index > Count) throw new IndexOutOfRangeException();
+
+                CollectionPoint<T> cursor = First;
+
+                while (index-- != 0) cursor = cursor.Next;
+
+                CollectionPoint<T> newPoint = new CollectionPoint<T>(value);
+
+                newPoint.Next = cursor.Next;
+                newPoint.Prev = cursor;
+                cursor.Next = newPoint;
+                newPoint.Next.Prev = newPoint;
+
+                Count++;
+
             }
         }
 
@@ -37,7 +55,7 @@ namespace LabWork_12
         }
 
         #region Добавление и удаление элементов
-        public void Add(T value)
+        public virtual void Add(T value)
         {
             if (First is null) First = Last = new CollectionPoint<T>(value);
             else
@@ -137,7 +155,7 @@ namespace LabWork_12
             }
         }
 
-        public bool Remove(T item)
+        public virtual bool Remove(T item)
         {
             if (First == null || IsReadOnly) return false;
             else
