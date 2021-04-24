@@ -55,7 +55,7 @@ namespace LabWork_10
         public override string ToString()
         {
             return base.ToString() +
-                $"Улица: {Street}\n" +
+                $"\nУлица: {Street}\n" +
                 $"Дом: {HouseNumber}";
         }
 
