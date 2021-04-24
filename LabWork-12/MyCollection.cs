@@ -156,7 +156,7 @@ namespace LabWork_12
             }
         }
 
-        public void Show()
+        public virtual void Show()
         {
             if (First != null)
             {
