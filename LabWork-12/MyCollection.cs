@@ -13,7 +13,7 @@ namespace LabWork_12
         public virtual T this[int index] {
             get
             {
-                if (index < 0 || index > Count) throw new IndexOutOfRangeException();
+                if (index < 0 || index >= Count) throw new IndexOutOfRangeException();
 
                 CollectionPoint<T> cursor = First;
 
@@ -23,21 +23,13 @@ namespace LabWork_12
             }
             set
             {
-                if (index < 0 || index > Count) throw new IndexOutOfRangeException();
+                if (index < 0 || index >= Count) throw new IndexOutOfRangeException();
 
                 CollectionPoint<T> cursor = First;
 
                 while (index-- != 0) cursor = cursor.Next;
 
-                CollectionPoint<T> newPoint = new CollectionPoint<T>(value);
-
-                newPoint.Next = cursor.Next;
-                newPoint.Prev = cursor;
-                cursor.Next = newPoint;
-                newPoint.Next.Prev = newPoint;
-
-                Count++;
-
+                cursor.Value = value;
             }
         }
 
