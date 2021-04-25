@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LabWork10.cs" />
+    <Compile Include="LabWork13.cs" />
     <Compile Include="LabWork9.cs" />
     <Compile Include="MyCollectionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -65,6 +66,10 @@
     <ProjectReference Include="..\LabWork-12\LabWork-12.csproj">
       <Project>{f1ea828e-3576-4d1a-9591-a0ae75bd4a49}</Project>
       <Name>LabWork-12</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LabWork-13\LabWork-13.csproj">
+      <Project>{b4ad77d4-5e57-4a93-a809-b4f6cfe70b83}</Project>
+      <Name>LabWork-13</Name>
     </ProjectReference>
     <ProjectReference Include="..\LabWork-9\LabWork-9.csproj">
       <Project>{2f69af29-0cd6-408e-9641-c52d329efad6}</Project>

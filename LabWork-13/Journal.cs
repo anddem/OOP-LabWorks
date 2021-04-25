@@ -15,9 +15,8 @@ namespace LabWork_13
         открытое автореализуемое свойство типа string c данными объекта, с которым связаны изменения в коллекции; 
         конструктор для инициализации полей класса; 
         перегруженную версию метода string ToString(). 
-        всех элементах массива. 
     */
-    class JournalEntity : ICloneable, IComparable
+    public class JournalEntity : ICloneable, IComparable
     {
         private DateTime EventTime { get; } = DateTime.Now;
 
@@ -61,45 +60,66 @@ namespace LabWork_13
             if (EventType != temp.EventType) return CollectionName.CompareTo(temp.CollectionName);
             return ChangedObjectInformation.CompareTo(temp.ChangedObjectInformation);
         }
+
+        public virtual void Show() => Output.Text(ToString());
     }
 
-    class ChangedObjectJournalEntity : JournalEntity
+    public class ChangedObjectJournalEntity : JournalEntity
     {
         public ChangedObjectJournalEntity(string collectionName, object changedObject) : base(collectionName, "Изменён объект по индексу", changedObject) { }
+
+        public override void Show() => Output.Text(ToString(), ConsoleColor.DarkYellow);
     }
 
-    class RemovedObjectJournalEntity : JournalEntity
+    public class RemovedObjectJournalEntity : JournalEntity
     {
         public RemovedObjectJournalEntity(string collectionName, object changedObject) : base(collectionName, "Из коллекции удалён объект", changedObject) { }
+
+        public override void Show() => Output.Error(ToString()); 
     }
 
-    class AddedObjectJournalEntity : JournalEntity
+    public class AddedObjectJournalEntity : JournalEntity
     {
         public AddedObjectJournalEntity(string collectionName, object changedObject) : base(collectionName, "В коллекцию добавлен элемент", changedObject) { }
+        public override void Show() =>  Output.Success(ToString());
     }
 
-    class Journal : MyCollection<JournalEntity>
+    public class Journal : MyCollection<JournalEntity>
     {
+        public string Name { get; set; } = "";
+
+        public Journal(string name) => Name = name;
+
         public void Add(string collectionName, string eventType, object changedObject) => Add(new JournalEntity(collectionName, eventType, changedObject));
-
-        public void Add(ChangedObjectJournalEntity entity) => Add(entity);
-
-        public void Add(RemovedObjectJournalEntity entity) => Add(entity);
-
-        public void Add(AddedObjectJournalEntity entity) => Add((JournalEntity)entity);
-
+        public void AddChanged(string collectionName, object changedObject) => Add(new ChangedObjectJournalEntity(collectionName, changedObject));
+        public void AddRemoved(string collectionName, object changedObject) => Add(new RemovedObjectJournalEntity(collectionName, changedObject));
+        public void AddAdded(string collectionName, object changedObject) => Add(new AddedObjectJournalEntity(collectionName, changedObject));
         public override void Show()
         {
             if (First != null)
             {
+                Output.Text($"{Name}\n", ConsoleColor.White);
                 CollectionPoint<JournalEntity> cursor = First;
                 while (cursor != null)
                 {
-                    Output.Text(cursor.Value);
-                    Output.Text("--\n");
+                    cursor.Value.Show();
+                    Output.Text("\n--\n", ConsoleColor.White);
                     cursor = cursor.Next;
                 }
             }
+        }
+
+        public void CollectionCountChanged(object source, CollectionHandlerEventArgs args)
+        {
+            if (args.EventType == "remove") AddRemoved(args.CollectionName, args.ChangedObject);
+            else if (args.EventType == "add") AddAdded(args.CollectionName, args.ChangedObject);
+            else Add(args.CollectionName, args.EventType, args.ChangedObject);
+        }
+
+        public void CollectionReferenceChanged(object source, CollectionHandlerEventArgs args)
+        {
+            if (args.EventType == "changed") AddChanged(args.CollectionName, args.ChangedObject);
+            else Add(args.CollectionName, args.EventType, args.ChangedObject);
         }
     }
 }
