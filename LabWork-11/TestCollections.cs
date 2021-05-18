@@ -9,7 +9,7 @@ using MyLibrary;
 
 namespace LabWork_11
 {
-    class TestCollections
+    public class TestCollections
     {
         List<Place> clsList;
         List<string> strList;

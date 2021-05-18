@@ -107,7 +107,7 @@ namespace LabWork_12
             }
         }
 
-        public IEnumerator<T> GetEnumerator()
+        public IEnumerator<T> GetEnumerator() //IEnumerable<T>
         {
             CollectionPoint<T> current = Last;
             while (current != null)

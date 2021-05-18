@@ -96,7 +96,7 @@ namespace MyLibrary
             Console.ForegroundColor = fColor;
         }
 
-        public static void Text(object obj, ConsoleColor textColor = ConsoleColor.Cyan) => Text(obj.ToString()+"\n");
+        public static void Text(object obj, ConsoleColor textColor = ConsoleColor.Cyan) => Text(obj.ToString()+"\n", textColor);
 
         public static void Success(string msg) => Text(msg, ConsoleColor.Green);
 
