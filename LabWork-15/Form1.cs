@@ -61,7 +61,8 @@ namespace LabWork_15
 
             new Thread(() =>
                 {
-                    Action action = () => figuresOnPictureBoxLabel.Text = $"Фигур на поле: {_circlesCount}";
+                    Action action = () => figuresOnPictureBoxLabel.Text = $"Фигур на поле: {_circlesCount}"; 
+
 
                     if (InvokeRequired) Invoke(action);
                     else action();
@@ -72,7 +73,7 @@ namespace LabWork_15
                         {
                             int dx = Rand.Integer(-10, 10);
                             int dy = Rand.Integer(-10, 10);
-                            figure.MoveWithBouncing(dx, dy, canvas);
+                            figure.Move(dx, dy);
                             figure.Draw(g);
                             Thread.Sleep((int)Math.Truncate(1.0 * redrawSpeed.Maximum / redrawSpeed.Value));
                             g.Clear(canvas.BackColor);

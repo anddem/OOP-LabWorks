@@ -16,7 +16,6 @@ namespace LabWork_16
     {
         private string _sqlConnectionString =
             @"Data Source=ANDREYLENOVO;Initial Catalog=LabWork;Integrated Security=True";
-        private DatabaseAPI _api = null;
         private DataSet _dataSet = null;
         private SqlConnection _sqlConnection;
         private SqlCommandBuilder _sqlCommandBuilder = null;
@@ -24,6 +23,7 @@ namespace LabWork_16
         private bool _userAddNewRow = false;
         private Form2 _form2 = null;
         private Form3 _form3 = null;
+        private Form4 _form4 = null;
 
         public Form1()
         {
@@ -67,7 +67,7 @@ namespace LabWork_16
             }
         }
 
-        private static void ShowError(Exception e)
+        public static void ShowError(Exception e)
         {
             MessageBox.Show(e.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
@@ -125,17 +125,14 @@ namespace LabWork_16
         {
             try
             {
-
+                if (_form4 is null) _form4 = new Form4(_sqlDataAdapter, _dataSet);
+                _form4.Show();
+                ReloadData();
             }
             catch (Exception exception)
             {
                 ShowError(exception);
             }
-        }
-
-        private void deleteButton_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void DeleteRow(DataGridViewRow row)

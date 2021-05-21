@@ -33,5 +33,10 @@ namespace LabWork_16
         {
             _dataGridViewCell.Value = e.End;
         }
+
+        private void Form2_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
