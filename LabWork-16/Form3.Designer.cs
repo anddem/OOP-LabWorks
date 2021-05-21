@@ -39,6 +39,7 @@ namespace LabWork_16
             this.monthCalendar1.CalendarDimensions = new System.Drawing.Size(4, 3);
             this.monthCalendar1.Location = new System.Drawing.Point(0, 59);
             this.monthCalendar1.Margin = new System.Windows.Forms.Padding(0, 9, 0, 9);
+            this.monthCalendar1.MaxSelectionCount = 10000;
             this.monthCalendar1.Name = "monthCalendar1";
             this.monthCalendar1.TabIndex = 0;
             // 

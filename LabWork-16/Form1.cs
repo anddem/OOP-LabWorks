@@ -280,7 +280,7 @@ namespace LabWork_16
 
         private void queryButton1_Click(object sender, EventArgs e)
         {
-            if (_form3 is null) _form3 = new Form3(_sqlConnection);
+            if (_form3 is null) _form3 = new Form3(_sqlConnection, _dataSet);
             _form3.Show();
         }
 
@@ -293,6 +293,68 @@ namespace LabWork_16
 
             var msg = string.Join(", ", mins);
             MessageBox.Show(msg, "asd");
+        }
+
+        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                _dataSet.Tables["WeatherData"].Clear();
+
+                var sql = "SELECT Date as [Дата]," +
+                        "MaxTemperature as [Максимальная температура], " +
+                        "MinTemperature as [Минимальная температура], " +
+                        "AvgTemperature as [Средняя температура], " +
+                        "AtmPressure as [Атмосферное давление], " +
+                        "WindSpeed as [Скорость ветра], " +
+                        "Rainfall as [Количество осадков], " +
+                        $"'Удалить' as [Действие] FROM WeatherData WHERE Date = {dateTimePicker1.Value.Date}";
+
+                var adapter = new SqlDataAdapter(sql, _sqlConnection);
+
+                adapter.Fill(_dataSet, "WeatherData");
+
+                for (int i = 0; i < dataGridView1.RowCount; i++)
+                {
+                    dataGridView1[7, i] = new DataGridViewLinkCell();
+                }
+            }
+            catch (Exception exp)
+            {
+                ShowError(exp);
+            }
+        }
+
+        private void dateTimePicker1_CloseUp(object sender, EventArgs e)
+        {
+            try
+            {
+                _dataSet.Tables["WeatherData"].Clear();
+
+                var sql = "SELECT Date as [Дата]," +
+                        "MaxTemperature as [Максимальная температура], " +
+                        "MinTemperature as [Минимальная температура], " +
+                        "AvgTemperature as [Средняя температура], " +
+                        "AtmPressure as [Атмосферное давление], " +
+                        "WindSpeed as [Скорость ветра], " +
+                        "Rainfall as [Количество осадков], " +
+                        $"'Удалить' as [Действие] FROM WeatherData WHERE Date = '{dateTimePicker1.Value.ToString("yyyy-MM-dd")}'";
+
+                var adapter = new SqlDataAdapter(sql, _sqlConnection);
+
+                adapter.Fill(_dataSet, "WeatherData");
+
+                if (dataGridView1.RowCount == 1) MessageBox.Show("По запросу не найдено ни одной записи", "Поиск по дате", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+
+                for (int i = 0; i < dataGridView1.RowCount; i++)
+                {
+                    dataGridView1[7, i] = new DataGridViewLinkCell();
+                }
+            }
+            catch (Exception exp)
+            {
+                ShowError(exp);
+            }
         }
     }
 }
