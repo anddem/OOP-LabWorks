@@ -344,7 +344,7 @@ namespace LabWork_16
 
                 adapter.Fill(_dataSet, "WeatherData");
 
-                if (dataGridView1.RowCount == 1) MessageBox.Show("По запросу не найдено ни одной записи", "Поиск по дате", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                if (dataGridView1.RowCount == 1) MessageBox.Show("По запросу не найдено ни одной записи", "Поиск по дате", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 for (int i = 0; i < dataGridView1.RowCount; i++)
                 {
