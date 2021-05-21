@@ -15,13 +15,14 @@ namespace LabWork_14
 
         private static void Main(string[] args)
         {
-            var collections = new TestCollections();
+            var list = new List<SortedDictionary<Place, Region>>();
 
-            var continentList = collections.ClsList;
-            var countryDict = collections.ClsSortedDict;
-
-            FillList(continentList);
-            FillDict(countryDict);
+            for (int i = 0; i < 2; i++)
+            {
+                var dict = new SortedDictionary<Place, Region>();
+                FillDict(dict);
+                list.Add(dict);
+            }
 
             Output.Text("Это презентация работы LINQ запросов и методов расширений\n", _INFORMATION_COLOR);
             Output.Text("Результаты работы запросов LINQ выделяются таким цветом: ", _INFORMATION_COLOR); 
@@ -30,21 +31,12 @@ namespace LabWork_14
             Output.Text("■■■\n", _LINQ_METHODS_RESULT);
             Output.Text(Environment.NewLine);
 
-            CountObjectsByType(continentList); // Счётчик, группировка
 
-            CountPopulation(continentList); // Агрегация
+            CountPopulation(list);
 
-            CountBuildingTypes(continentList); // Счётчик, группировка
-
-            OrderPlacesByPopulation(continentList, out int avgPopulation); // Сортировка по населению, агрегация
-
-            PrintCitiesWithPopulationMoreThanAverage(continentList, avgPopulation); // Выборка данных
+            OrderPlacesByPopulation(list, out int avgPopulation);
         }
 
-        private static void FillList(List<Place> list, int count = 50)
-        {
-            for (var i = 1; i <= count; i++) list.Add(CreateRandomItem());
-        }
 
         private static void FillDict(SortedDictionary<Place, Region> dict, int count = 30)
         {
@@ -104,111 +96,59 @@ namespace LabWork_14
             return new City(city, population, houses, new Address(name, street, houseNumber));
         }
         #endregion
-
-        private static void CountObjectsByType(List<Place> places)
-        {
-            var queryGroups = (from place in places group place by place.GetType()).ToDictionary(g => g.Key);
-            var methodsGroups = places.GroupBy(g => g.GetType()).ToDictionary(g => g.Key);
-
-            Output.Text("Подсчёт количества сгенерированных элементов по типам\n", _INFORMATION_COLOR);
-            Output.Text($"{"   Тип объекта    ",18} | Количество\n" +
-                        $"{new string('—', 32)}\n", _INFORMATION_COLOR);
-
-            foreach (var key in queryGroups.Keys)
-            {
-                Output.Text($"{key,-18} |  ", _INFORMATION_COLOR);
-                Output.Text($"{queryGroups[key].Count(),2}", _LINQ_QUERIES_RESULT);
-                Output.Text(" |  ", _INFORMATION_COLOR);
-                Output.Text($"{methodsGroups[key].Count(),2}\n", _LINQ_METHODS_RESULT);
-            }
-
-            Output.Text(Environment.NewLine);
-        }
-
-        private static void CountPopulation(List<Place> places)
+        
+        private static void CountPopulation(List<SortedDictionary<Place, Region>> places)
         {
             // Операторы выборки
-            var pop1 = (from place in places
-                where place is Region && !(place is City)
-                select place).Sum(place => (place as Region)?.Population ?? 0);
+            var listsToOneCollectionQuery = from dict in places
+                from p in dict.Values
+                group p by p.Name;
 
-            // Методы расширения
-            var pop2 = places.Where(place => place is Region && !(place is City)).Sum(place => (place as Region)?.Population ?? 0);
+            var listsToOneCollectionMethods = places.SelectMany(
+                dict => dict.Values).GroupBy(p => p.Name);
 
-            Output.Text("Население в регионах:\n", _INFORMATION_COLOR);
-            Output.Text($"{pop1}", _LINQ_QUERIES_RESULT);
-            Output.Text(" | ", _INFORMATION_COLOR);
-            Output.Text($"{pop2}\n", _LINQ_METHODS_RESULT);
-
-            Output.Text(Environment.NewLine);
-        }
-
-        private static void CountBuildingTypes(List<Place> places)
-        {
-            var queryGroup = (from place in places
-                where place is Address
-                group place by (place as Address)?.Name).ToDictionary(group => group.Key);
-
-            var methodsGroups = places.Where(place => place is Address).GroupBy(place => (place as Address)?.Name)
-                .ToDictionary(group => group.Key);
-
-            Output.Text("Подсчёт зданий определённого типа\n", _INFORMATION_COLOR);
-            Output.Text($"{"    Тип здания    ",18} | Количество\n" +
-                        $"{new string('—', 32)}\n", _INFORMATION_COLOR);
-
-            foreach (var key in queryGroup.Keys)
+            for (int i = 0; i < listsToOneCollectionQuery.Count(); i++)
             {
-                Output.Text($"{key,-18} |  ", _INFORMATION_COLOR);
-                Output.Text($"{queryGroup[key].Count(),2}", _LINQ_QUERIES_RESULT);
-                Output.Text(" |  ", _INFORMATION_COLOR);
-                Output.Text($"{methodsGroups[key].Count(),2}\n", _LINQ_METHODS_RESULT);
+                var q = listsToOneCollectionQuery.ElementAt(i);
+                var l = q.Select(g => g);
+                Output.Text($"{q.Count()} | {q.Key}", _LINQ_QUERIES_RESULT);
+                foreach (var pair in l) Output.Text($"\n{pair} ", _LINQ_QUERIES_RESULT);
+                
+                var m = listsToOneCollectionMethods.ElementAt(i);
+                Output.Text($"{m.Count()}\n", _LINQ_METHODS_RESULT);
             }
 
             Output.Text(Environment.NewLine);
         }
 
-        private static void OrderPlacesByPopulation(List<Place> places, out int avgPopulation)
+        private static void OrderPlacesByPopulation(List<SortedDictionary<Place, Region>> list, out int avgPopulation)
         {
-            var queryOrdering = (from place in places orderby (place as Region)?.Population ?? 0 descending select place).ToList();
+            var listsToOneCollectionQuery = from dict in list
+                from p in dict
+                orderby p.Value.Population
+                select p;
 
-            var methodsOrdering = places.OrderByDescending(place => (place as Region)?.Population ?? 0).ToList();
+             var listsToOneCollectionMethods = list.SelectMany(
+                 dict => dict.OrderBy(
+                     pair => pair.Value.Population))
+                 .OrderBy(pair => pair.Value.Population);
 
-            avgPopulation = (int)places.Where(place => place is Region).Average(place => (place as Region)?.Population);
+            avgPopulation = (int)listsToOneCollectionMethods.Average(p => p.Value.Population);
+            int buffer = avgPopulation;
 
-            Output.Text("Сортировка мест по населению\n", _INFORMATION_COLOR);
-            Output.Text(" №| Название места\n", _INFORMATION_COLOR);
+            var averageSortedMethods = listsToOneCollectionMethods.Where(p => p.Value.Population < buffer);
+            var averageSordetQuery = from p in listsToOneCollectionQuery where p.Value.Population < buffer select p;
 
-            for (int i = 0; i < queryOrdering.Count(); i++)
+            Output.Text($"Сортировка мест по населению меньше среднего: {buffer}\n", _INFORMATION_COLOR);
+
+            foreach (var region in averageSortedMethods)
             {
-                Output.Text($"{i + 1, 2}: ", _INFORMATION_COLOR);
-                Output.Text($"{queryOrdering.ElementAt(i).Name, -40}", _LINQ_QUERIES_RESULT);
-                Output.Text(" | ", _INFORMATION_COLOR);
-                Output.Text($"{methodsOrdering.ElementAt(i).Name, -40}", _LINQ_METHODS_RESULT);
-                Output.Text($" | Equal Objects: {queryOrdering.ElementAt(i).Equals(methodsOrdering.ElementAt(i))}", _INFORMATION_COLOR);
-                Output.Text($" | {(methodsOrdering.ElementAt(i) as Region)?.Population}\n", _INFORMATION_COLOR);
+                Output.Text($"{region.Value.Population, 10} | {region.Value.Name}\n", _LINQ_QUERIES_RESULT);
             }
 
-            Output.Text(Environment.NewLine);
-        }
-
-        private static void PrintCitiesWithPopulationMoreThanAverage(List<Place> places, int avgPopulation)
-        {
-            var querySelect = (from place in places
-                where (place as Region)?.Population > avgPopulation
-                orderby (place as Region)?.Population descending
-                select place).ToList();
-
-            var methodsSelect = places.Where(place => (place as Region)?.Population > avgPopulation)
-                .OrderByDescending(place => (place as Region)?.Population).ToList();
-
-            Output.Text($"Регионы и города с населением, больше среднего ({avgPopulation})\n", _INFORMATION_COLOR);
-            Output.Text($"{new string('—', 32)}\n", _INFORMATION_COLOR);
-
-            for (int i = 0; i < querySelect.Count(); i++)
+            foreach (var q in averageSordetQuery)
             {
-                Output.Text($"{querySelect.ElementAt(i).Name,-40}", _LINQ_QUERIES_RESULT);
-                Output.Text(" | ", _INFORMATION_COLOR);
-                Output.Text($"{methodsSelect.ElementAt(i).Name}\n", _LINQ_METHODS_RESULT);
+                Output.Text($"{q.Value.Population, 10} | {q.Value.Name}\n", _LINQ_METHODS_RESULT);
             }
 
             Output.Text(Environment.NewLine);
