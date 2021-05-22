@@ -11,16 +11,18 @@ using Microsoft.Data.SqlClient;
 
 namespace LabWork_16
 {
-    public partial class Form4 : Form
+    public partial class AddRowForm : Form
     {
         private SqlDataAdapter _sqlAdapter;
         private DataSet _dataSet;
+        private Action _onCloseAction;
 
-        public Form4(SqlDataAdapter sqlDataAdapter, DataSet dataSet)
+        public AddRowForm(SqlDataAdapter sqlDataAdapter, DataSet dataSet, Action onCloseAction)
         {
             InitializeComponent();
             _sqlAdapter = sqlDataAdapter;
             _dataSet = dataSet;
+            _onCloseAction = onCloseAction;
         }
 
         private void acceptButton_Click(object sender, EventArgs e)
@@ -33,18 +35,19 @@ namespace LabWork_16
                 newRow["Минимальная температура"] = ParseDouble(minTempBox.Text, "Минимальная температура");
                 newRow["Максимальная температура"] = ParseDouble(maxTempBox.Text, "Максимальная температура");
                 newRow["Средняя температура"] = ParseDouble(avgTempBox.Text, "Средняя температура");
-                newRow["Скорость ветра"] = ParseInt(windSpeedBox.Text, "Ветер");
                 newRow["Атмосферное давление"] = ParseDouble(pressureBox.Text, "Давление");
+                newRow["Скорость ветра"] = ParseInt(windSpeedBox.Text, "Ветер");
                 newRow["Количество осадков"] = ParseInt(rainfallBox.Text, "Осадки");
 
                 _dataSet.Tables["WeatherData"].Rows.Add(newRow);
                 _sqlAdapter.Update(_dataSet, "WeatherData");
 
+                _onCloseAction();
                 this.Close();
             }
             catch (Exception exception)
             {
-                Form1.ShowError(exception);
+                MainForm.ShowError(exception);
             }
         }
         private double ParseDouble(string text, string field)

@@ -1,7 +1,7 @@
 ﻿
 namespace LabWork_16
 {
-    partial class Form4
+    partial class AddRowForm
     {
         /// <summary>
         /// Required designer variable.
@@ -112,7 +112,7 @@ namespace LabWork_16
             this.acceptButton.UseVisualStyleBackColor = true;
             this.acceptButton.Click += new System.EventHandler(this.acceptButton_Click);
             // 
-            // Form4
+            // AddRowForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -125,8 +125,8 @@ namespace LabWork_16
             this.Controls.Add(this.maxTempBox);
             this.Controls.Add(this.minTempBox);
             this.Controls.Add(this.dateTimePicker1);
-            this.Name = "Form4";
-            this.Text = "Form4";
+            this.Name = "AddRowForm";
+            this.Text = "Добавление записи";
             this.ResumeLayout(false);
             this.PerformLayout();
 

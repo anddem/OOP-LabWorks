@@ -1,7 +1,7 @@
 ﻿
 namespace LabWork_16
 {
-    partial class Form3
+    partial class AnalyzeDateRangeForm
     {
         /// <summary>
         /// Required designer variable.
@@ -66,20 +66,20 @@ namespace LabWork_16
             this.label1.Text = "Выбор диапазона осуществляется с помощью нажатия кнопки Shift и нужного дня";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // Form3
+            // AnalyzeDateRangeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(652, 606);
+            this.ClientSize = new System.Drawing.Size(666, 606);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.confirmRangeButton);
             this.Controls.Add(this.monthCalendar1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "Form3";
+            this.Name = "AnalyzeDateRangeForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "Средняя температура за выбранный период";
