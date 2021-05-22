@@ -1,24 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 using System.Windows.Forms;
 using Microsoft.Data.SqlClient;
-using Microsoft.VisualBasic;
 
 namespace LabWork_16
 {
-    public partial class Form3 : Form
+    public partial class AnalyzeDateRangeForm : Form
     {
         private SqlConnection _connection;
         private DataSet _dataSet;
 
-        public Form3(SqlConnection connection, DataSet dataSet)
+        public AnalyzeDateRangeForm(SqlConnection connection, DataSet dataSet)
         {
             InitializeComponent();
             _connection = connection;
@@ -43,16 +36,16 @@ namespace LabWork_16
                          select data;
 
             var min = string.Join("", minMax.Take(1).AsEnumerable()
-                .Select(t => $"{t["Дата"].ToString().Substring(0, 10)} | {t["Средняя температура"]}"));
-            var max = string.Join("", minMax.TakeLast(1).AsEnumerable()
-                .Select(t => $"{t["Дата"].ToString().Substring(0, 10)} | {t["Средняя температура"]}"));
+                .Select(t => $"{t["Дата"].ToString()?.Substring(0, 10)} | {t["Средняя температура"]}"));
+            var max = string.Join("", minMax.TakeLast(1)?.AsEnumerable()
+                .Select(t => $"{t["Дата"].ToString()?.Substring(0, 10)} | {t["Средняя температура"]}"));
 
             var message =
                 $"Период: {monthCalendar1.SelectionStart.ToShortDateString()}-{monthCalendar1.SelectionEnd.ToShortDateString()}\n" +
                 $"Самый холодный день: {min}\n" +
                 $"Самый тёплый день: {max}";
 
-            MessageBox.Show(message, "Результаты запроса");
+            MessageBox.Show(message, "Результаты запроса", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         void FindAvgTemperature()

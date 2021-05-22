@@ -1,35 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Microsoft.Data.SqlClient;
-using Microsoft.VisualBasic;
 
 namespace LabWork_16
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
-        private string _sqlConnectionString =
-            @"Data Source=ANDREYLENOVO;Initial Catalog=LabWork;Integrated Security=True";
+        private const string _SqlConnectionString =
+            @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=F:\csFIles\OOP-LabWorks\LabWork-16\Database1.mdf;Integrated Security=True"; //Строка подключения к БД
         private DataSet _dataSet = null;
         private SqlConnection _sqlConnection;
         private SqlCommandBuilder _sqlCommandBuilder = null;
         private SqlDataAdapter _sqlDataAdapter = null;
-        private bool _userAddNewRow = false;
-        private Form2 _form2 = null;
-        private Form3 _form3 = null;
-        private Form4 _form4 = null;
 
-        public Form1()
+        private bool _userAddNewRow = false;
+
+        private Form2 _form2 = null;
+
+        public MainForm()
         {
             InitializeComponent();
         }
 
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            _sqlConnection = new SqlConnection(_SqlConnectionString);
+            _sqlConnection.Open();
+
+            LoadData();
+        }
+
+        #region Получение данных из базы
         private void LoadData()
         {
             try
@@ -67,21 +69,6 @@ namespace LabWork_16
             }
         }
 
-        public static void ShowError(Exception e)
-        {
-            MessageBox.Show(e.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            _sqlConnection = new SqlConnection(_sqlConnectionString);
-            _sqlConnection.Open();
-
-            LoadData();
-        }
-
-        private void updateView_Click(object sender, EventArgs e) => ReloadData();
-
         private void ReloadData()
         {
             try
@@ -103,6 +90,10 @@ namespace LabWork_16
             }
         }
 
+        private void updateView_Click(object sender, EventArgs e) => ReloadData();
+        #endregion
+
+        #region Добавление данных в базу
         private void dataGridView1_UserAddedRow(object sender, DataGridViewRowEventArgs e)
         {
             try
@@ -121,55 +112,21 @@ namespace LabWork_16
 
         }
 
-        private void addRow_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (_form4 is null) _form4 = new Form4(_sqlDataAdapter, _dataSet);
-                _form4.Show();
-                ReloadData();
-            }
-            catch (Exception exception)
-            {
-                ShowError(exception);
-            }
-        }
-
-        private void DeleteRow(DataGridViewRow row)
-        {
-            if (MessageBox.Show("Вы действительно хотите удалить эту запись?", "Удаление строки", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-            {
-                int rowIndex = row.Index;
-                dataGridView1.Rows.RemoveAt(rowIndex); // Корректировка из-за строки с заголовками
-                _dataSet.Tables["WeatherData"].Rows[rowIndex].Delete();
-
-                _sqlDataAdapter.Update(_dataSet, "WeatherData");
-            }
-        }
+        private void addRow_Click(object sender, EventArgs e) => new AddRowForm(_sqlDataAdapter, _dataSet, ReloadData).Show();
 
         private void AddRow(DataGridViewRow row)
         {
             try
             {
-                int newRowIndex = row.Index;
-                var newRow = _dataSet.Tables["WeatherData"].NewRow();
-                var lastRow = dataGridView1.Rows[newRowIndex];
+                var newRow = _dataSet.Tables["WeatherData"]?.NewRow();
+                var lastRow = dataGridView1.Rows[row.Index];
 
-                foreach (DataGridViewColumn column in dataGridView1.Columns)
-                {
-                    if (column.Name == "Действие") continue;
-                    if (column.Name == "Дата")
-                        newRow["Дата"] = lastRow.Cells["Дата"].Value is not System.DBNull
-                            ? lastRow.Cells["Дата"].Value
-                            : DateTime.Now.Date;
-                    else
-                        newRow[column.Name] = lastRow.Cells[column.Name].Value;
-                }
+                FillDataSetRow(newRow, lastRow);
 
-                _dataSet.Tables["WeatherData"].Rows.Add(newRow);
-                _dataSet.Tables["WeatherData"].Rows.RemoveAt(_dataSet.Tables["WeatherData"].Rows.Count - 1);
+                _dataSet.Tables["WeatherData"]?.Rows.Add(newRow);
+                _dataSet.Tables["WeatherData"]?.Rows.RemoveAt(_dataSet.Tables["WeatherData"].Rows.Count - 1);
                 dataGridView1.Rows.RemoveAt(dataGridView1.RowCount - 2);
-                dataGridView1.Rows[newRowIndex-1].Cells[^1].Value = "Удалить";
+                dataGridView1.Rows[row.Index - 1].Cells[^1].Value = "Удалить";
 
                 _sqlDataAdapter.Update(_dataSet, "WeatherData");
 
@@ -180,23 +137,61 @@ namespace LabWork_16
                 ShowError(exception);
             }
         }
+        #endregion
 
+        /// <summary>
+        /// Удаление строки из DataSet и базы данных
+        /// </summary>
+        /// <param name="row">Удаляемая строка</param>
+        private void DeleteRow(DataGridViewRow row)
+        {
+            if (MessageBox.Show("Вы действительно хотите удалить эту запись?", "Удаление строки",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes) return;
+            
+            dataGridView1.Rows.RemoveAt(row.Index);
+            _dataSet.Tables["WeatherData"]?.Rows[row.Index].Delete();
+
+            _sqlDataAdapter.Update(_dataSet, "WeatherData");
+            
+        }
+
+        /// <summary>
+        /// Заполнение строки DataRow информацией из строки в DataGrid
+        /// </summary>
+        /// <param name="editableRow">Обновляемая строка</param>
+        /// <param name="sourceRow">Строка-источник</param>
+        private void FillDataSetRow(DataRow editableRow, DataGridViewRow sourceRow)
+        {
+            foreach (DataGridViewColumn column in dataGridView1.Columns)
+            {
+                switch (column.Name)
+                {
+                    case "Действие":
+                        continue;
+                    case "Дата":
+                        editableRow["Дата"] = sourceRow.Cells["Дата"].Value is not System.DBNull
+                            ? sourceRow.Cells["Дата"].Value
+                            : DateTime.Now.Date;
+                        break;
+                    default:
+                        editableRow[column.Name] = sourceRow.Cells[column.Name].Value;
+                        break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Обновление данных в активной строке
+        /// </summary>
+        /// <param name="dataGridEditRow">Обновляемая строка</param>
         private void UpdateRow(DataGridViewRow dataGridEditRow)
+        
         {
             try
             {
-                var dataSetEditRow = _dataSet.Tables["WeatherData"].Rows[dataGridEditRow.Index];
-                
-                foreach (DataGridViewColumn column in dataGridView1.Columns)
-                {
-                    if (column.Name == "Действие") continue;
-                    if (column.Name == "Дата")
-                        dataSetEditRow["Дата"] = dataGridEditRow.Cells["Дата"].Value is not System.DBNull
-                            ? dataGridEditRow.Cells["Дата"].Value
-                            : DateTime.Now.Date;
-                    else
-                        dataSetEditRow[column.Name] = dataGridEditRow.Cells[column.Name].Value;
-                }
+                var dataSetEditRow = _dataSet.Tables["WeatherData"]?.Rows[dataGridEditRow.Index];
+
+                FillDataSetRow(dataSetEditRow, dataGridEditRow);
 
                 _sqlDataAdapter.Update(_dataSet, "WeatherData");
                 dataGridEditRow.Cells[^1].Value = "Удалить";
@@ -207,11 +202,16 @@ namespace LabWork_16
             }
         }
 
+        /// <summary>
+        /// Выбор действия относительно указанного в ячейке
+        /// </summary>
+        /// <param name="e"></param>
         private void SelectCellAction(DataGridViewCellEventArgs e)
         {
-            var cell = dataGridView1[e.ColumnIndex, e.RowIndex];
-            var row = dataGridView1.Rows[cell.RowIndex];
-            switch (cell.FormattedValue)
+            var action = dataGridView1[e.ColumnIndex, e.RowIndex].FormattedValue;
+            var row = dataGridView1.Rows[e.RowIndex];
+
+            switch (action as string)
             {
                 case "Удалить":
                     DeleteRow(row);
@@ -223,9 +223,14 @@ namespace LabWork_16
                     UpdateRow(row);
                     break;
             }
+
             ReloadData();
         }
 
+        /// <summary>
+        /// Показ календаря для выбора значения при редактировании строки с датой
+        /// </summary>
+        /// <param name="rowIndex"></param>
         private void ShowDatePicker(int rowIndex)
         {
             try
@@ -245,12 +250,7 @@ namespace LabWork_16
         {
             try
             {
-                switch (e.ColumnIndex)
-                {
-                    case 7:
-                        SelectCellAction(e);
-                        break;
-                }
+                if (e.ColumnIndex == 7) SelectCellAction(e);
             }
             catch (Exception exception)
             {
@@ -260,8 +260,7 @@ namespace LabWork_16
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (e.ColumnIndex == 0)
-                ShowDatePicker(e.RowIndex);
+            if (e.ColumnIndex == 0) ShowDatePicker(e.RowIndex);
         }
 
         private void dataGridView1_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -275,58 +274,13 @@ namespace LabWork_16
             editRow.Cells["Действие"].Value = "Обновить";
         }
 
-        private void queryButton1_Click(object sender, EventArgs e)
-        {
-            if (_form3 is null) _form3 = new Form3(_sqlConnection, _dataSet);
-            _form3.Show();
-        }
-
-        private void queryButton2_Click(object sender, EventArgs e)
-        {
-            var groups = (from data in _dataSet.Tables["WeatherData"].AsEnumerable()
-                group data by data["Дата"].ToString().Substring(3, 7));
-            var mins = (from g in groups
-                select g);
-
-            var msg = string.Join(", ", mins);
-            MessageBox.Show(msg, "asd");
-        }
-
-        private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                _dataSet.Tables["WeatherData"].Clear();
-
-                var sql = "SELECT Date as [Дата]," +
-                        "MaxTemperature as [Максимальная температура], " +
-                        "MinTemperature as [Минимальная температура], " +
-                        "AvgTemperature as [Средняя температура], " +
-                        "AtmPressure as [Атмосферное давление], " +
-                        "WindSpeed as [Скорость ветра], " +
-                        "Rainfall as [Количество осадков], " +
-                        $"'Удалить' as [Действие] FROM WeatherData WHERE Date = {dateTimePicker1.Value.Date}";
-
-                var adapter = new SqlDataAdapter(sql, _sqlConnection);
-
-                adapter.Fill(_dataSet, "WeatherData");
-
-                for (int i = 0; i < dataGridView1.RowCount; i++)
-                {
-                    dataGridView1[7, i] = new DataGridViewLinkCell();
-                }
-            }
-            catch (Exception exp)
-            {
-                ShowError(exp);
-            }
-        }
-
+        private void queryButton1_Click(object sender, EventArgs e) => new Form3(_sqlConnection, _dataSet).Show();
+        
         private void dateTimePicker1_CloseUp(object sender, EventArgs e)
         {
             try
             {
-                _dataSet.Tables["WeatherData"].Clear();
+                _dataSet.Tables["WeatherData"]?.Clear();
 
                 var sql = "SELECT Date as [Дата]," +
                         "MaxTemperature as [Максимальная температура], " +
@@ -335,23 +289,52 @@ namespace LabWork_16
                         "AtmPressure as [Атмосферное давление], " +
                         "WindSpeed as [Скорость ветра], " +
                         "Rainfall as [Количество осадков], " +
-                        $"'Удалить' as [Действие] FROM WeatherData WHERE Date = '{dateTimePicker1.Value.ToString("yyyy-MM-dd")}'";
+                        $"'Удалить' as [Действие] FROM WeatherData WHERE Date = '{dateTimePicker1.Value:yyyy-MM-dd}'";
 
                 var adapter = new SqlDataAdapter(sql, _sqlConnection);
 
                 adapter.Fill(_dataSet, "WeatherData");
 
-                if (dataGridView1.RowCount == 1) MessageBox.Show("По запросу не найдено ни одной записи", "Поиск по дате", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (dataGridView1.RowCount == 1)
+                    MessageBox.Show("По запросу не найдено ни одной записи", "Поиск по дате", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                for (int i = 0; i < dataGridView1.RowCount; i++)
-                {
-                    dataGridView1[7, i] = new DataGridViewLinkCell();
-                }
+                foreach (DataGridViewRow dataGridViewRow in dataGridView1.Rows)
+                    dataGridViewRow.Cells[^1] = new DataGridViewLinkCell();
             }
             catch (Exception exp)
             {
                 ShowError(exp);
             }
         }
+
+        /// <summary>
+        /// Обработка неверного ввода в ячейки DataGrid
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dataGridView1_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            var message = "";
+            if ((e.Context & DataGridViewDataErrorContexts.CurrentCellChange) != 0)
+                message += "Ошибка изменения данных\n";
+            if ((e.Context & DataGridViewDataErrorContexts.Commit) != 0)
+                message += "Не удалось сохранить значение в активной ячейке\n";
+            if ((e.Context & DataGridViewDataErrorContexts.Parsing) != 0)
+                message += $"В активной ячейке должно быть значение {dataGridView1.CurrentCell.ValueType}\n";
+            if ((e.Context & DataGridViewDataErrorContexts.LeaveControl) != 0)
+                message += "Очистите активную ячейку или измените значение";
+
+            ShowError(new Exception(message));
+        }
+
+        /// <summary>
+        /// Вывод сообщений об ошибке
+        /// </summary>
+        /// <param name="e"></param>
+        public static void ShowError(Exception e)
+        {
+            MessageBox.Show(e.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
     }
 }

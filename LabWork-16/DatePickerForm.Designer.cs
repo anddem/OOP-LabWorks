@@ -1,7 +1,7 @@
 ﻿
 namespace LabWork_16
 {
-    partial class Form2
+    partial class DatePickerForm
     {
         /// <summary>
         /// Required designer variable.
@@ -42,7 +42,7 @@ namespace LabWork_16
             this.monthCalendar1.TabIndex = 0;
             this.monthCalendar1.DateSelected += new System.Windows.Forms.DateRangeEventHandler(this.monthCalendar1_DateSelected);
             // 
-            // Form2
+            // DatePickerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -53,7 +53,7 @@ namespace LabWork_16
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "Form2";
+            this.Name = "DatePickerForm";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "Дата измерений";
