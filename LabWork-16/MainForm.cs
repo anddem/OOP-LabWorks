@@ -16,7 +16,7 @@ namespace LabWork_16
 
         private bool _userAddNewRow = false;
 
-        private Form2 _form2 = null;
+        private DatePickerForm _form2 = null;
 
         public MainForm()
         {
@@ -237,7 +237,7 @@ namespace LabWork_16
             {
                 var dateCell = dataGridView1[0, rowIndex];
                 _form2?.Close();
-                _form2 = new Form2(dateCell);
+                _form2 = new DatePickerForm(dateCell);
                 _form2.Show();
             }
             catch (Exception exception)
@@ -274,7 +274,7 @@ namespace LabWork_16
             editRow.Cells["Действие"].Value = "Обновить";
         }
 
-        private void queryButton1_Click(object sender, EventArgs e) => new Form3(_sqlConnection, _dataSet).Show();
+        private void queryButton1_Click(object sender, EventArgs e) => new AnalyzeDateRangeForm(_sqlConnection, _dataSet).Show();
         
         private void dateTimePicker1_CloseUp(object sender, EventArgs e)
         {
